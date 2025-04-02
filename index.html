@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hover-Expand Sidebar</title>
+    <title>Hover-Expand Sidebar with Tasks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -146,6 +146,504 @@
             margin: 20px 0;
             width: 80%;
         }
+
+        /* Task Tab Styles */
+        .container {
+            flex: 1;
+            background-color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: #1a73e8;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tab-button.active {
+            background-color: #1557b0;
+        }
+
+        .settings-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            align-items: flex-end;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
+
+        .input-section.collapsed {
+            max-height: 0;
+            margin-bottom: 0;
+            opacity: 0;
+            visibility: hidden;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #555;
+        }
+
+        input, select, textarea {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: filter 0.3s;
+            font-size: 13px;
+            height: fit-content;
+        }
+
+        button:hover {
+            filter: brightness(0.9);
+        }
+
+        .task-list {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        .task-item {
+            padding: 12px;
+            background-color: white;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .priority-high { border-left: 4px solid #dc3545; }
+        .priority-medium { border-left: 4px solid #ffc107; }
+        .priority-low { border-left: 4px solid #28a745; }
+
+        .completed {
+            opacity: 0.7;
+            background-color: #f8f9fa;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .task-title {
+            font-weight: bold;
+            flex-grow: 1;
+            min-width: 200px;
+            word-wrap: break-word;
+            min-height: 20px;
+            padding: 5px;
+            border: none;
+            border-radius: 4px;
+            width: 65%;
+        }
+
+        .complete-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            margin-left: 10px;
+            flex-shrink: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .current-step {
+            margin-top: 5px;
+            width: 65%;
+            min-height: 40px;
+            max-height: 200px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-y: hidden;
+            word-wrap: break-word;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 0.85em;
+            color: #666;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .task-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .notes-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+            color: #1a73e8;
+            font-size: 0.9em;
+        }
+
+        .notes-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .notes-content.expanded {
+            max-height: 1000px;
+        }
+
+        .task-controls {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            padding: 6px 12px;
+        }
+
+        .move-buttons {
+            position: absolute;
+            top: 50px;
+            right: 12px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .search-container {
+            display: inline-flex;
+            flex-grow: 1;
+            margin-bottom: 0;
+            align-items: center;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            max-width: 400px;
+            margin-left: 10px;
+        }
+
+        .notes-container {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .large-notes {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            font-size: 14px;
+        }
+
+        .star-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .star-rating i {
+            color: #ddd;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .star-rating i.active {
+            color: #ffc107;
+        }
+
+        .timeline-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-bar {
+            height: 6px;
+            width: 100px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .timeline-progress {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease, background-color 0.5s ease;
+        }
+
+        .timeline-dates {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .subheading {
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            height: 30px;
+        }
+
+        .subheading-input {
+            border: none;
+            background: transparent;
+            font-weight: bold;
+            flex: 1;
+            padding: 2px 5px;
+            height: 20px;
+        }
+
+        .subheading-input:focus {
+            outline: none;
+            background: white;
+        }
+
+        .subheading-controls {
+            display: flex;
+            gap: 5px;
+            margin-left: 10px;
+        }
+
+        .subheading-selector {
+            position: absolute;
+            right: 50px;
+            top: 12px;
+        }
+
+        .new-item-btn {
+            min-width: 120px;
+            margin-right: 10px;
+            padding: 8px 15px;
+            font-size: 13px;
+            background-color: #28a745;
+        }
+
+        .reset-btn {
+            background-color: #dc3545;
+            margin-top: 15px;
+        }
+
+        .new-subheading-bar {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+            height: 30px;
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            align-items: center;
+        }
+
+        .new-subheading-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 2px 5px;
+            height: 20px;
+        }
+
+        .new-subheading-input:focus {
+            outline: none;
+            background: white;
+        }
+
+        .collapsible-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
+        }
+
+        .settings-menu {
+            display: none;
+            position: absolute;
+            right: 10px;
+            top: 50px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .settings-menu.active {
+            display: block;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .color-option {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .color-option.selected {
+            border-color: #000;
+        }
+
+        /* Subheading controls spacing */
+        .subheading-controls {
+            gap: 8px !important;
+            margin-left: 15px !important;
+        }
+
+        /* Add button sizing */
+        .new-subheading-bar button {
+            height: 30px !important;
+            padding: 0 10px !important;
+            line-height: 30px !important;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .container {
+                height: auto;
+            }
+            
+            .tab-button {
+                flex: 1;
+                padding: 10px;
+                font-size: 12px;
+            }
+            
+            .input-section {
+                flex-direction: column;
+            }
+            
+            .task-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            button {
+                padding: 6px 12px;
+            }
+
+            .subheading-selector {
+                position: static;
+                margin-top: 5px;
+                width: 100%;
+            }
+            
+            .task-title {
+                width: 100% !important;
+            }
+            
+            .complete-checkbox {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+            
+            .current-step {
+                width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -170,7 +668,7 @@
             
             <div class="menu-item" onclick="setActive(this)">
                 <div class="menu-icon"><i class="fas fa-tasks"></i></div>
-                <div class="menu-text">Projects</div>
+                <div class="menu-text">Tasks</div>
                 <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
             </div>
             
@@ -184,7 +682,87 @@
         </div>
     </div>
 
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active">
+                <i class="fas fa-tasks"></i> Tasks
+            </button>
+            <button class="settings-button" onclick="toggleSettingsMenu()">
+                <i class="fas fa-cog"></i>
+            </button>
+            <div class="settings-menu" id="settingsMenu">
+                <button class="reset-btn" onclick="resetAllData()">
+                    Reset All Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Tasks Tab -->
+        <div id="tasks" class="tab-content active">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <button class="new-item-btn" onclick="toggleInputs('tasks')">
+                    <i class="fas fa-plus"></i> New Task
+                </button>
+                <div class="search-container">
+                    <input type="text" class="search-bar" id="taskSearch" placeholder="Search tasks..." oninput="searchTasks()">
+                </div>
+            </div>
+            
+            <div class="input-section collapsed">
+                <div class="input-group">
+                    <input type="text" id="taskTitle" placeholder="Task title">
+                </div>
+                <div class="input-group">
+                    <label for="taskStart">Start Date</label>
+                    <input type="date" id="taskStart">
+                </div>
+                <div class="input-group">
+                    <label for="taskDue">Due Date</label>
+                    <input type="date" id="taskDue">
+                </div>
+                <div class="input-group">
+                    <label>Priority</label>
+                    <div class="star-rating" id="priorityStars">
+                        <i class="fas fa-star" data-value="1"></i>
+                        <i class="fas fa-star" data-value="2"></i>
+                        <i class="fas fa-star" data-value="3"></i>
+                        <i class="fas fa-star" data-value="4"></i>
+                        <i class="fas fa-star" data-value="5"></i>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Color</label>
+                    <div class="color-picker" id="taskColorPicker">
+                        <div class="color-option selected" style="background-color: #1a73e8;" data-color="#1a73e8"></div>
+                        <div class="color-option" style="background-color: #dc3545;" data-color="#dc3545"></div>
+                        <div class="color-option" style="background-color: #28a745;" data-color="#28a745"></div>
+                        <div class="color-option" style="background-color: #ffc107;" data-color="#ffc107"></div>
+                        <div class="color-option" style="background-color: #6f42c1;" data-color="#6f42c1"></div>
+                    </div>
+                </div>
+                <button onclick="addTask()">Add Task</button>
+                
+                <div class="notes-container">
+                    <textarea id="taskNotes" class="large-notes" placeholder="Notes..."></textarea>
+                </div>
+            </div>
+
+            <div class="new-subheading-bar">
+                <input type="text" id="newTaskSubheading" class="new-subheading-input" placeholder="New subheading name">
+                <button onclick="addSubheading('task')">Add</button>
+            </div>
+
+            <div class="task-list" id="tasksList">
+                <h3 class="current-header">Current Tasks</h3>
+                <div id="currentList"></div>
+                <h3 class="completed-header">Completed Tasks</h3>
+                <div id="doneList"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Sidebar functionality
         function setActive(clickedItem) {
             // Remove active class from all items
             document.querySelectorAll('.menu-item').forEach(item => {
@@ -194,6 +772,644 @@
             // Add active class to clicked item
             clickedItem.classList.add('active');
         }
+
+        // Data Management
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let selectedPriority = 1;
+        let selectedColor = '#1a73e8';
+        let taskSubheadings = JSON.parse(localStorage.getItem('taskSubheadings')) || ['General'];
+        let collapsedSubheadings = JSON.parse(localStorage.getItem('collapsedSubheadings')) || {};
+
+        // Auto-resize textarea function
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto'; // Reset height
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
+        // Toggle settings menu
+        function toggleSettingsMenu() {
+            const menu = document.getElementById('settingsMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Toggle input sections
+        function toggleInputs(tab) {
+            const inputSection = document.querySelector(`#${tab} .input-section`);
+            const toggleBtn = document.querySelector(`#${tab} .new-item-btn`);
+            
+            inputSection.classList.toggle('collapsed');
+            
+            if (inputSection.classList.contains('collapsed')) {
+                toggleBtn.innerHTML = '<i class="fas fa-plus"></i> New Task';
+            } else {
+                toggleBtn.innerHTML = 'Hide Form';
+            }
+        }
+
+        // Reset all data
+        function resetAllData() {
+            if (confirm('Are you sure you want to delete ALL data? This cannot be undone.')) {
+                localStorage.clear();
+                tasks = [];
+                taskSubheadings = ['General'];
+                collapsedSubheadings = {};
+                
+                saveAllData();
+                renderTasks();
+            }
+        }
+
+        function saveAllData() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('taskSubheadings', JSON.stringify(taskSubheadings));
+            localStorage.setItem('collapsedSubheadings', JSON.stringify(collapsedSubheadings));
+        }
+
+        // Subheading functions
+        function renderSubheadings(type) {
+            const listContainer = document.getElementById('tasksList');
+            
+            // Clear the containers
+            listContainer.innerHTML = '<h3 class="current-header">Current Tasks</h3><div id="currentList"></div><h3 class="completed-header">Completed Tasks</h3><div id="doneList"></div>';
+            
+            taskSubheadings.forEach((subheading, index) => {
+                // Render items for this subheading in the list container
+                renderItemsForSubheading(type, subheading, listContainer, index);
+            });
+        }
+
+        function renderItemsForSubheading(type, subheading, container, index) {
+            let items = tasks.filter(t => t.subheading === subheading);
+            
+            if (items.length === 0) return;
+            
+            // Check if this subheading is collapsed
+            const isCollapsed = collapsedSubheadings[`${type}-${subheading}`] || false;
+            
+            // Add subheading label
+            const subheadingElement = document.createElement('div');
+            subheadingElement.className = 'subheading';
+            subheadingElement.onclick = (e) => {
+                // Don't toggle if clicking on controls
+                if (e.target.closest('.subheading-controls')) return;
+                
+                const key = `${type}-${subheading}`;
+                collapsedSubheadings[key] = !collapsedSubheadings[key];
+                localStorage.setItem('collapsedSubheadings', JSON.stringify(collapsedSubheadings));
+                
+                const content = subheadingElement.nextElementSibling;
+                content.classList.toggle('collapsed');
+            };
+            
+            const input = document.createElement('input');
+            input.className = 'subheading-input';
+            input.value = subheading;
+            input.placeholder = 'Subheading name';
+            input.onchange = () => updateSubheading(type, index, input.value);
+            
+            const controls = document.createElement('div');
+            controls.className = 'subheading-controls';
+            
+            const upBtn = document.createElement('button');
+            upBtn.innerHTML = '↑';
+            upBtn.style.padding = '2px 5px';
+            upBtn.onclick = (e) => {
+                e.stopPropagation();
+                moveSubheading(type, index, 'up');
+            };
+            upBtn.disabled = index === 0;
+            
+            const downBtn = document.createElement('button');
+            downBtn.innerHTML = '↓';
+            downBtn.style.padding = '2px 5px';
+            downBtn.onclick = (e) => {
+                e.stopPropagation();
+                moveSubheading(type, index, 'down');
+            };
+            downBtn.disabled = index === taskSubheadings.length - 1;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '×';
+            removeBtn.style.padding = '2px 5px';
+            removeBtn.style.backgroundColor = '#dc3545';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                removeSubheading(type, index);
+            };
+            removeBtn.disabled = taskSubheadings.length <= 1;
+            
+            controls.appendChild(upBtn);
+            controls.appendChild(downBtn);
+            controls.appendChild(removeBtn);
+            
+            subheadingElement.appendChild(input);
+            subheadingElement.appendChild(controls);
+            
+            // Create content container
+            const contentContainer = document.createElement('div');
+            contentContainer.className = `collapsible-content ${isCollapsed ? 'collapsed' : ''}`;
+            
+            // For tasks, we need to add to either current or completed list
+            const currentItems = items.filter(t => !t.completed);
+            const completedItems = items.filter(t => t.completed);
+            
+            if (currentItems.length > 0) {
+                const currentContainer = document.getElementById('currentList');
+                currentContainer.appendChild(subheadingElement.cloneNode(true));
+                const currentContent = document.createElement('div');
+                currentContent.className = `collapsible-content ${isCollapsed ? 'collapsed' : ''}`;
+                
+                currentItems.forEach(task => {
+                    const taskElement = createTaskElement(task);
+                    currentContent.appendChild(taskElement);
+                });
+                
+                currentContainer.appendChild(currentContent);
+            }
+            
+            if (completedItems.length > 0) {
+                const completedHeader = document.createElement('div');
+                completedHeader.className = 'subheading';
+                completedHeader.textContent = `${subheading} - Completed`;
+                completedHeader.onclick = (e) => {
+                    if (e.target.closest('.subheading-controls')) return;
+                    const key = `${type}-${subheading}-completed`;
+                    collapsedSubheadings[key] = !collapsedSubheadings[key];
+                    localStorage.setItem('collapsedSubheadings', JSON.stringify(collapsedSubheadings));
+                    
+                    const content = completedHeader.nextElementSibling;
+                    content.classList.toggle('collapsed');
+                };
+                
+                document.getElementById('doneList').appendChild(completedHeader);
+                const completedContent = document.createElement('div');
+                completedContent.className = `collapsible-content ${collapsedSubheadings[`${type}-${subheading}-completed`] ? 'collapsed' : ''}`;
+                
+                completedItems.forEach(task => {
+                    const taskElement = createTaskElement(task);
+                    completedContent.appendChild(taskElement);
+                });
+                
+                document.getElementById('doneList').appendChild(completedContent);
+            }
+        }
+
+        function moveSubheading(type, index, direction) {
+            if (direction === 'up' && index > 0) {
+                [taskSubheadings[index], taskSubheadings[index - 1]] = [taskSubheadings[index - 1], taskSubheadings[index]];
+            } else if (direction === 'down' && index < taskSubheadings.length - 1) {
+                [taskSubheadings[index], taskSubheadings[index + 1]] = [taskSubheadings[index + 1], taskSubheadings[index]];
+            }
+            
+            saveSubheadings(type);
+            renderSubheadings(type);
+        }
+
+        function updateSubheading(type, index, value) {
+            const oldValue = taskSubheadings[index];
+            taskSubheadings[index] = value;
+            
+            // Update all items with the old subheading
+            tasks.forEach(task => {
+                if (task.subheading === oldValue) {
+                    task.subheading = value;
+                }
+            });
+            saveTasks();
+            
+            saveSubheadings(type);
+            renderSubheadings(type);
+        }
+
+        function addSubheading(type) {
+            const inputId = `new${type.charAt(0).toUpperCase() + type.slice(1)}Subheading`;
+            const newSubheading = document.getElementById(inputId).value.trim();
+            
+            if (!newSubheading) return;
+            
+            if (!taskSubheadings.includes(newSubheading)) {
+                taskSubheadings.push(newSubheading);
+                document.getElementById(inputId).value = '';
+                saveSubheadings(type);
+                renderSubheadings(type);
+            }
+        }
+
+        function removeSubheading(type, index) {
+            if (taskSubheadings.length <= 1) return;
+            
+            if (!confirm(`Are you sure you want to delete the "${taskSubheadings[index]}" subheading? All items in this subheading will be moved to "${taskSubheadings[0]}"`)) {
+                return;
+            }
+            
+            // Move items from this subheading to the first subheading
+            const subheadingToRemove = taskSubheadings[index];
+            tasks.forEach(task => {
+                if (task.subheading === subheadingToRemove) {
+                    task.subheading = taskSubheadings[0];
+                }
+            });
+            saveTasks();
+            
+            // Remove from collapsed state tracking
+            const key = `${type}-${subheadingToRemove}`;
+            if (collapsedSubheadings[key]) {
+                delete collapsedSubheadings[key];
+            }
+            
+            taskSubheadings.splice(index, 1);
+            saveSubheadings(type);
+            renderSubheadings(type);
+        }
+
+        function saveSubheadings(type) {
+            localStorage.setItem('taskSubheadings', JSON.stringify(taskSubheadings));
+        }
+
+        // Star Rating System
+        function setupStarRating() {
+            const stars = document.querySelectorAll('#priorityStars i');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.getAttribute('data-value'));
+                    selectedPriority = value;
+                    
+                    // Update stars display
+                    stars.forEach((s, index) => {
+                        if (index < value) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+            });
+            
+            // Set up color picker
+            const colorOptions = document.querySelectorAll('#taskColorPicker .color-option');
+            colorOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    colorOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedColor = option.getAttribute('data-color');
+                });
+            });
+        }
+
+        // Task Functions
+        function addTask() {
+            const priorityText = 
+                selectedPriority >= 4 ? 'high' : 
+                selectedPriority >= 2 ? 'medium' : 'low';
+
+            const task = {
+                id: Date.now(),
+                title: document.getElementById('taskTitle').value.trim(),
+                start: document.getElementById('taskStart').value,
+                due: document.getElementById('taskDue').value,
+                priority: priorityText,
+                priorityValue: selectedPriority,
+                notes: document.getElementById('taskNotes').value,
+                currentStep: '',
+                completed: false,
+                created: new Date().toISOString(),
+                subheading: taskSubheadings[0],
+                color: selectedColor
+            };
+
+            if (!task.title) return;
+
+            tasks.push(task);
+            saveTasks();
+            renderTasks();
+            clearTaskForm();
+        }
+
+        function renderTasks() {
+            renderSubheadings('task');
+        }
+
+        function createTaskElement(task) {
+            const taskElement = document.createElement('div');
+            taskElement.className = `task-item priority-${task.priority} ${task.completed ? 'completed' : ''}`;
+            taskElement.setAttribute('data-id', task.id);
+            
+            // Calculate timeline progress if dates exist
+            let timelineHTML = '';
+            if (task.start && task.due) {
+                const progress = calculateTimelineProgress(task.start, task.due);
+                
+                // Determine color based on progress
+                let progressColor;
+                if (progress.percentage < 33) {
+                    progressColor = '#28a745'; // Green
+                } else if (progress.percentage < 66) {
+                    progressColor = '#ffc107'; // Yellow
+                } else {
+                    progressColor = '#dc3545'; // Red
+                }
+                
+                timelineHTML = `
+                    <div class="timeline-container">
+                        <div class="timeline-bar">
+                            <div class="timeline-progress" style="width: ${progress.percentage}%; background-color: ${progressColor}"></div>
+                        </div>
+                        <div class="timeline-dates">
+                            <span>${formatDate(task.due)}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Create star rating for priority
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                starsHTML += `<i class="fas fa-star ${i <= task.priorityValue ? 'active' : ''}" 
+                             onclick="updateTaskPriority(${task.id}, ${i})"></i>`;
+            }
+
+            // Subheading selector
+            const subheadingOptions = taskSubheadings.map(sh => 
+                `<option value="${sh}" ${task.subheading === sh ? 'selected' : ''}>${sh}</option>`
+            ).join('');
+
+            // Color picker for the task
+            const colors = ['#1a73e8', '#dc3545', '#28a745', '#ffc107', '#6f42c1'];
+            const colorOptions = colors.map(color => 
+                `<div class="color-option ${task.color === color ? 'selected' : ''}" 
+                      style="background-color: ${color}" 
+                      data-color="${color}"
+                      onclick="updateTaskColor(${task.id}, '${color}')"></div>`
+            ).join('');
+
+            taskElement.innerHTML = `
+                <div class="task-header">
+                    <span class="task-title" contenteditable="true" 
+                          oninput="updateTaskField(${task.id}, 'title', this.innerText)">
+                        ${task.title}
+                    </span>
+                    <div class="complete-checkbox">
+                        <input type="checkbox" id="complete-${task.id}" ${task.completed ? 'checked' : ''} 
+                               onchange="toggleTask(${task.id})">
+                        <label for="complete-${task.id}" class="complete-checkbox-label">Complete</label>
+                    </div>
+                    <div class="task-controls">
+                        <button class="delete-btn" onclick="confirmDelete('task', ${task.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="subheading-selector">
+                    <select onchange="updateTaskField(${task.id}, 'subheading', this.value)">
+                        ${subheadingOptions}
+                    </select>
+                </div>
+                <textarea class="current-step" placeholder="Current step..." 
+                       oninput="updateTaskField(${task.id}, 'currentStep', this.value); autoResizeTextarea(this)">${task.currentStep || ''}</textarea>
+                <div class="task-meta">
+                    <div class="task-meta-item">
+                        <span>Priority:</span>
+                        <div class="star-rating">
+                            ${starsHTML}
+                        </div>
+                    </div>
+                    <div class="task-meta-item">
+                        <span>Start:</span>
+                        <input type="date" value="${task.start}" 
+                               onchange="updateTaskField(${task.id}, 'start', this.value)">
+                    </div>
+                    <div class="task-meta-item">
+                        <span>Due:</span>
+                        <input type="date" value="${task.due}" 
+                               onchange="updateTaskField(${task.id}, 'due', this.value)">
+                    </div>
+                    <div class="task-meta-item">
+                        <span>Color:</span>
+                        <div class="color-picker">
+                            ${colorOptions}
+                        </div>
+                    </div>
+                    ${timelineHTML}
+                </div>
+                <div class="notes-header" onclick="toggleNotes(this)">
+                    Notes
+                </div>
+                <div class="notes-content">
+                    <textarea oninput="updateTaskField(${task.id}, 'notes', this.value)"
+                              style="width:100%; min-height: 120px;">${task.notes}</textarea>
+                </div>
+                <div class="move-buttons">
+                    <button onclick="moveTask(${task.id}, 'up')">↑</button>
+                    <button onclick="moveTask(${task.id}, 'down')">↓</button>
+                </div>
+            `;
+            
+            // Initialize auto-resize for the current step textarea
+            const currentStepTextarea = taskElement.querySelector('.current-step');
+            autoResizeTextarea(currentStepTextarea);
+            
+            return taskElement;
+        }
+
+        function calculateTimelineProgress(startDate, dueDate) {
+            const now = new Date();
+            const start = new Date(startDate);
+            const end = new Date(dueDate);
+            
+            // Ensure dates are valid
+            if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                return { percentage: 0, status: 'invalid' };
+            }
+            
+            const total = end - start;
+            const elapsed = now - start;
+            
+            let percentage = (elapsed / total) * 100;
+            
+            // Clamp between 0 and 100
+            percentage = Math.max(0, Math.min(100, percentage));
+            
+            let status = 'on-track';
+            if (now > end) {
+                status = 'overdue';
+            } else if (percentage > 80) {
+                status = 'nearing-deadline';
+            }
+            
+            return { percentage, status };
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function updateTaskPriority(taskId, newPriority) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.priorityValue = newPriority;
+                task.priority = newPriority >= 4 ? 'high' : newPriority >= 2 ? 'medium' : 'low';
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function updateTaskColor(taskId, color) {
+            const task = tasks.find(t => t.id === taskId);
+            if (task) {
+                task.color = color;
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function moveTask(id, direction) {
+            const index = tasks.findIndex(t => t.id === id);
+            if (direction === 'up' && index > 0) {
+                [tasks[index], tasks[index - 1]] = [tasks[index - 1], tasks[index]];
+            } else if (direction === 'down' && index < tasks.length - 1) {
+                [tasks[index], tasks[index + 1]] = [tasks[index + 1], tasks[index]];
+            }
+            saveTasks();
+            renderTasks();
+        }
+
+        // Common Functions
+        function confirmDelete(type, id) {
+            if (window.confirm(`Are you sure you want to delete this ${type}?`)) {
+                deleteTask(id);
+            }
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            renderTasks();
+        }
+
+        function updateTaskField(id, field, value) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task[field] = value;
+                saveTasks();
+                if (field === 'subheading') {
+                    renderTasks();
+                }
+            }
+        }
+
+        function toggleNotes(header) {
+            const content = header.nextElementSibling;
+            content.classList.toggle('expanded');
+        }
+
+        function searchTasks() {
+            const searchTerm = document.getElementById('taskSearch').value.toLowerCase();
+            const filtered = tasks.filter(t => 
+                t.title.toLowerCase().includes(searchTerm) ||
+                (t.notes && t.notes.toLowerCase().includes(searchTerm)) ||
+                (t.currentStep && t.currentStep.toLowerCase().includes(searchTerm))
+            );
+            
+            const tasksList = document.getElementById('tasksList');
+            tasksList.innerHTML = '<h3 class="current-header">Current Tasks</h3><div id="currentList"></div><h3 class="completed-header">Completed Tasks</h3><div id="doneList"></div>';
+            
+            // Group by subheading
+            const currentGrouped = {};
+            const completedGrouped = {};
+            
+            filtered.forEach(task => {
+                if (!task.completed) {
+                    if (!currentGrouped[task.subheading]) {
+                        currentGrouped[task.subheading] = [];
+                    }
+                    currentGrouped[task.subheading].push(task);
+                } else {
+                    if (!completedGrouped[task.subheading]) {
+                        completedGrouped[task.subheading] = [];
+                    }
+                    completedGrouped[task.subheading].push(task);
+                }
+            });
+            
+            // Render current tasks
+            for (const [subheading, items] of Object.entries(currentGrouped)) {
+                const subheadingElement = document.createElement('div');
+                subheadingElement.className = 'subheading';
+                subheadingElement.textContent = subheading;
+                document.getElementById('currentList').appendChild(subheadingElement);
+                
+                items.forEach(task => {
+                    const taskElement = createTaskElement(task);
+                    document.getElementById('currentList').appendChild(taskElement);
+                });
+            }
+            
+            // Render completed tasks
+            for (const [subheading, items] of Object.entries(completedGrouped)) {
+                const subheadingElement = document.createElement('div');
+                subheadingElement.className = 'subheading';
+                subheadingElement.textContent = `${subheading} - Completed`;
+                document.getElementById('doneList').appendChild(subheadingElement);
+                
+                items.forEach(task => {
+                    const taskElement = createTaskElement(task);
+                    document.getElementById('doneList').appendChild(taskElement);
+                });
+            }
+        }
+
+        // Form Clearing
+        function clearTaskForm() {
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskStart').value = '';
+            document.getElementById('taskDue').value = '';
+            document.getElementById('taskNotes').value = '';
+            // Reset star rating
+            selectedPriority = 1;
+            const stars = document.querySelectorAll('#priorityStars i');
+            stars.forEach((star, index) => {
+                if (index === 0) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            // Reset color picker
+            selectedColor = '#1a73e8';
+            const colorOptions = document.querySelectorAll('#taskColorPicker .color-option');
+            colorOptions.forEach((option, index) => {
+                if (index === 0) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        // Storage
+        function saveTasks() { localStorage.setItem('tasks', JSON.stringify(tasks)); }
+
+        // Initialization
+        window.onload = () => {
+            setupStarRating();
+            renderTasks();
+            
+            // Collapse all input sections by default
+            document.querySelectorAll('.input-section').forEach(section => {
+                section.classList.add('collapsed');
+            });
+        };
     </script>
 </body>
 </html>
