@@ -147,61 +147,14 @@
             width: 80%;
         }
 
-        /* Task Tab Styles */
-        .container {
+        /* Task Content Styles */
+        .content {
             flex: 1;
             background-color: white;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-        }
-
-        .tabs {
-            display: flex;
-            background-color: #1a73e8;
-            flex-wrap: wrap;
-            position: relative;
-        }
-
-        .tab-button {
-            padding: 12px 20px;
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .tab-button.active {
-            background-color: #1557b0;
-        }
-
-        .settings-button {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 15px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .tab-content.active {
-            display: block;
         }
 
         .input-section {
@@ -214,6 +167,7 @@
             align-items: flex-end;
             border-bottom: 1px solid #ddd;
             padding-bottom: 15px;
+            margin: 15px;
         }
 
         .input-section.collapsed {
@@ -265,7 +219,9 @@
             background-color: #f8f9fa;
             border-radius: 5px;
             padding: 10px;
-            margin-bottom: 15px;
+            margin: 15px;
+            flex: 1;
+            overflow-y: auto;
         }
 
         .task-item {
@@ -391,9 +347,8 @@
         }
 
         .search-container {
-            display: inline-flex;
-            flex-grow: 1;
-            margin-bottom: 0;
+            display: flex;
+            margin: 15px;
             align-items: center;
         }
 
@@ -516,7 +471,7 @@
         .new-subheading-bar {
             display: flex;
             gap: 5px;
-            margin: 10px 0;
+            margin: 10px 15px;
             height: 30px;
             background-color: #e0e0e0;
             padding: 5px 10px;
@@ -601,14 +556,8 @@
                 height: auto;
             }
             
-            .container {
+            .content {
                 height: auto;
-            }
-            
-            .tab-button {
-                flex: 1;
-                padding: 10px;
-                font-size: 12px;
             }
             
             .input-section {
@@ -654,19 +603,19 @@
         </div>
         
         <div class="nav-menu">
-            <div class="menu-item active" onclick="setActive(this)">
+            <div class="menu-item" onclick="setActive(this, 'dashboard')">
                 <div class="menu-icon"><i class="fas fa-home"></i></div>
                 <div class="menu-text">Dashboard</div>
                 <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
             </div>
             
-            <div class="menu-item" onclick="setActive(this)">
+            <div class="menu-item" onclick="setActive(this, 'calendar')">
                 <div class="menu-icon"><i class="fas fa-calendar-alt"></i></div>
                 <div class="menu-text">Calendar</div>
                 <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
             </div>
             
-            <div class="menu-item" onclick="setActive(this)">
+            <div class="menu-item active" onclick="setActive(this, 'tasks')">
                 <div class="menu-icon"><i class="fas fa-tasks"></i></div>
                 <div class="menu-text">Tasks</div>
                 <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
@@ -674,7 +623,7 @@
             
             <div class="divider"></div>
             
-            <div class="menu-item" onclick="setActive(this)">
+            <div class="menu-item" onclick="setActive(this, 'settings')">
                 <div class="menu-icon"><i class="fas fa-cog"></i></div>
                 <div class="menu-text">Settings</div>
                 <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
@@ -682,29 +631,23 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="tabs">
-            <button class="tab-button active">
-                <i class="fas fa-tasks"></i> Tasks
-            </button>
-            <button class="settings-button" onclick="toggleSettingsMenu()">
-                <i class="fas fa-cog"></i>
-            </button>
-            <div class="settings-menu" id="settingsMenu">
-                <button class="reset-btn" onclick="resetAllData()">
-                    Reset All Data
-                </button>
-            </div>
-        </div>
-
-        <!-- Tasks Tab -->
-        <div id="tasks" class="tab-content active">
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+    <div class="content" id="content">
+        <!-- Tasks Content (shown by default) -->
+        <div id="tasks-content">
+            <div style="display: flex; align-items: center; margin: 15px;">
                 <button class="new-item-btn" onclick="toggleInputs('tasks')">
                     <i class="fas fa-plus"></i> New Task
                 </button>
                 <div class="search-container">
                     <input type="text" class="search-bar" id="taskSearch" placeholder="Search tasks..." oninput="searchTasks()">
+                </div>
+                <button class="settings-button" onclick="toggleSettingsMenu()" style="margin-left: auto;">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <div class="settings-menu" id="settingsMenu">
+                    <button class="reset-btn" onclick="resetAllData()">
+                        Reset All Data
+                    </button>
                 </div>
             </div>
             
@@ -759,11 +702,34 @@
                 <div id="doneList"></div>
             </div>
         </div>
+
+        <!-- Other content sections (hidden by default) -->
+        <div id="dashboard-content" style="display: none; padding: 20px;">
+            <h2>Dashboard Content</h2>
+            <p>This is the dashboard section.</p>
+        </div>
+
+        <div id="calendar-content" style="display: none; padding: 20px;">
+            <h2>Calendar Content</h2>
+            <p>This is the calendar section.</p>
+        </div>
+
+        <div id="settings-content" style="display: none; padding: 20px;">
+            <h2>Settings Content</h2>
+            <p>This is the settings section.</p>
+        </div>
     </div>
 
     <script>
+        // Data Management
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let selectedPriority = 1;
+        let selectedColor = '#1a73e8';
+        let taskSubheadings = JSON.parse(localStorage.getItem('taskSubheadings')) || ['General'];
+        let collapsedSubheadings = JSON.parse(localStorage.getItem('collapsedSubheadings')) || {};
+
         // Sidebar functionality
-        function setActive(clickedItem) {
+        function setActive(clickedItem, section) {
             // Remove active class from all items
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.classList.remove('active');
@@ -771,14 +737,15 @@
             
             // Add active class to clicked item
             clickedItem.classList.add('active');
+            
+            // Hide all content sections
+            document.querySelectorAll('#content > div').forEach(div => {
+                div.style.display = 'none';
+            });
+            
+            // Show the selected content section
+            document.getElementById(`${section}-content`).style.display = 'block';
         }
-
-        // Data Management
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let selectedPriority = 1;
-        let selectedColor = '#1a73e8';
-        let taskSubheadings = JSON.parse(localStorage.getItem('taskSubheadings')) || ['General'];
-        let collapsedSubheadings = JSON.parse(localStorage.getItem('collapsedSubheadings')) || {};
 
         // Auto-resize textarea function
         function autoResizeTextarea(textarea) {
@@ -794,8 +761,8 @@
 
         // Toggle input sections
         function toggleInputs(tab) {
-            const inputSection = document.querySelector(`#${tab} .input-section`);
-            const toggleBtn = document.querySelector(`#${tab} .new-item-btn`);
+            const inputSection = document.querySelector(`#${tab}-content .input-section`);
+            const toggleBtn = document.querySelector(`#${tab}-content .new-item-btn`);
             
             inputSection.classList.toggle('collapsed');
             
