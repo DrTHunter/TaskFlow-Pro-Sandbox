@@ -179,6 +179,27 @@
             padding-bottom: 0;
         }
 
+        .wide-input-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .wide-input-section .input-group:first-child {
+            flex: 3;
+            min-width: 300px;
+        }
+
+        .wide-input-section .input-group:not(:first-child) {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .wide-input-section button {
+            margin-left: auto;
+            height: 36px;
+        }
+
         .input-group {
             display: flex;
             flex-direction: column;
@@ -564,6 +585,17 @@
                 flex-direction: column;
             }
             
+            .wide-input-section .input-group:first-child,
+            .wide-input-section .input-group:not(:first-child) {
+                flex: 1 0 100%;
+                min-width: 100%;
+            }
+            
+            .wide-input-section button {
+                margin-left: 0;
+                width: 100%;
+            }
+            
             .task-meta {
                 flex-direction: column;
                 gap: 5px;
@@ -651,7 +683,7 @@
                 </div>
             </div>
             
-            <div class="input-section collapsed">
+            <div class="input-section collapsed wide-input-section">
                 <div class="input-group">
                     <input type="text" id="taskTitle" placeholder="Task title">
                 </div>
