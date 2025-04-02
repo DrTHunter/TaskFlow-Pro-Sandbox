@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Collapsible Sidebar</title>
+    <title>Hover-Expand Sidebar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -35,7 +35,7 @@
             position: relative;
         }
 
-        .sidebar.expanded {
+        .sidebar:hover {
             width: 250px;
             align-items: flex-start;
             padding-left: 20px;
@@ -49,7 +49,7 @@
             justify-content: center;
         }
 
-        .sidebar.expanded .logo-container {
+        .sidebar:hover .logo-container {
             justify-content: flex-start;
             padding-left: 10px;
         }
@@ -74,19 +74,8 @@
             display: none;
         }
 
-        .sidebar.expanded .logo-text {
+        .sidebar:hover .logo-text {
             display: block;
-        }
-
-        .sidebar-toggle {
-            position: absolute;
-            right: 15px;
-            top: 25px;
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
         }
 
         .nav-menu {
@@ -132,7 +121,7 @@
             white-space: nowrap;
         }
 
-        .sidebar.expanded .menu-text {
+        .sidebar:hover .menu-text {
             display: block;
         }
 
@@ -143,7 +132,7 @@
             display: none;
         }
 
-        .sidebar.expanded .menu-chevron {
+        .sidebar:hover .menu-chevron {
             display: block;
         }
 
@@ -165,9 +154,6 @@
             <div class="logo">S</div>
             <div class="logo-text">Sidebar</div>
         </div>
-        <button class="sidebar-toggle" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
         
         <div class="nav-menu">
             <div class="menu-item active" onclick="setActive(this)">
@@ -199,20 +185,6 @@
     </div>
 
     <script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('expanded');
-            
-            const icon = document.querySelector('.sidebar-toggle i');
-            if (sidebar.classList.contains('expanded')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-        }
-
         function setActive(clickedItem) {
             // Remove active class from all items
             document.querySelectorAll('.menu-item').forEach(item => {
