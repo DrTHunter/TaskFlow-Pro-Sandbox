@@ -330,53 +330,24 @@
             background-color: #f8f9fa;
         }
 
-        /* UPDATED TASK STYLES - MODIFIED AS REQUESTED */
         .task-header {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
             gap: 10px;
-            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
 
         .task-title {
             font-weight: bold;
-            flex-grow: 1;
-            min-width: 200px;
+            margin-bottom: 5px;
+            width: 50%;
+            max-width: 50%;
             word-wrap: break-word;
             min-height: 20px;
             padding: 5px;
             border: none;
             border-radius: 4px;
-            width: 65%; /* Reduced width by 35% */
         }
-
-        .complete-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-            margin-left: 10px;
-            flex-shrink: 1;
-            min-width: 0;
-            overflow: hidden;
-        }
-
-        .current-step {
-            margin-top: 5px;
-            width: 65%; /* Reduced width by 35% */
-            min-height: 40px;
-            max-height: 200px;
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            resize: none;
-            font-size: 13px;
-            line-height: 1.4;
-            overflow-y: hidden;
-            word-wrap: break-word;
-        }
-        /* END OF UPDATED TASK STYLES */
 
         .task-meta {
             display: flex;
@@ -392,6 +363,20 @@
             display: flex;
             align-items: center;
             gap: 5px;
+        }
+
+        .current-step {
+            margin-top: 5px;
+            width: 50%;
+            min-height: 20px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow: hidden;
+            height: auto;
         }
 
         .notes-header {
@@ -464,16 +449,15 @@
         }
 
         .search-container {
-            display: inline-flex;
-            flex-grow: 1;
-            margin-bottom: 0;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
             align-items: center;
         }
 
         .search-bar {
-            flex-grow: 1;
-            max-width: 400px;
-            margin-left: 10px;
+            width: 100%;
+            max-width: 300px;
         }
 
         .filter-btn {
@@ -633,8 +617,7 @@
         }
 
         .new-item-btn {
-            min-width: 120px;
-            margin-right: 10px;
+            margin: 10px 0;
             padding: 8px 15px;
             font-size: 13px;
             background-color: #28a745;
@@ -679,6 +662,12 @@
             max-height: 0;
         }
 
+        .complete-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
         .contact-header {
             display: flex;
             align-items: center;
@@ -700,18 +689,12 @@
         }
 
         .waiting-on-input {
-            height: 36px;
-            width: 300px !important;
-            margin-left: 0 !important;
-            margin-right: 10px;
+            margin-left: 10px;
+            width: 150px;
             padding: 5px;
             font-size: 13px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            resize: none;
-            min-height: 36px;
-            max-height: none;
-            overflow-y: auto;
         }
 
         .process-header {
@@ -741,13 +724,6 @@
             font-weight: bold;
             font-size: 16px;
             flex: 1;
-            width: 50%;
-        }
-
-        .note-date {
-            font-size: 14px;
-            color: #666;
-            margin-left: 10px;
         }
 
         .settings-menu {
@@ -1035,13 +1011,17 @@
 
         /* Contact Name and Waiting On adjustments */
         .contact-name-input {
-            width: 60% !important;
+            width: 50% !important;
+        }
+
+        .waiting-on-input {
+            width: 200px !important;
+            margin-left: 5px !important;
         }
 
         /* Subheading controls spacing */
         .subheading-controls {
             gap: 8px !important;
-            margin-left: 15px !important;
         }
 
         /* Add button sizing */
@@ -1049,22 +1029,6 @@
             height: 30px !important;
             padding: 0 10px !important;
             line-height: 30px !important;
-        }
-
-        /* Note title and date input */
-        .note-title-input-container {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            gap: 10px;
-        }
-
-        .note-title-input {
-            width: 50% !important;
-        }
-
-        .note-date-input {
-            width: 150px !important;
         }
 
         @media (max-width: 768px) {
@@ -1120,30 +1084,6 @@
                 position: static;
                 margin-top: 5px;
                 width: 100%;
-            }
-
-            .contact-name-input,
-            .waiting-on-input {
-                width: 100% !important;
-            }
-
-            .note-title-input {
-                width: 100% !important;
-            }
-            
-            /* Responsive adjustments for the modified task layout */
-            .task-title {
-                width: 100% !important;
-            }
-            
-            .complete-checkbox {
-                margin-left: 0;
-                margin-top: 10px;
-                width: 100%;
-            }
-            
-            .current-step {
-                width: 100% !important;
             }
         }
     </style>
@@ -1276,15 +1216,12 @@
 
         <!-- Tasks Tab -->
         <div id="tasks" class="tab-content active">
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <button class="new-item-btn" onclick="toggleInputs('tasks')">
-                    <i class="fas fa-plus"></i> New Task
-                </button>
-                <div class="search-container">
-                    <input type="text" class="search-bar" id="taskSearch" placeholder="Search tasks..." oninput="searchTasks()">
-                </div>
+            <button class="new-item-btn" onclick="toggleInputs('tasks')">
+                <i class="fas fa-plus"></i> New Task
+            </button>
+            <div class="search-container">
+                <input type="text" class="search-bar" id="taskSearch" placeholder="Search tasks..." oninput="searchTasks()">
             </div>
-            
             <div class="input-section collapsed">
                 <div class="input-group">
                     <input type="text" id="taskTitle" placeholder="Task title">
@@ -1339,19 +1276,15 @@
 
         <!-- Notes Tab -->
         <div id="notes" class="tab-content">
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <button class="new-item-btn" onclick="toggleInputs('notes')">
-                    <i class="fas fa-plus"></i> New Note
-                </button>
-                <div class="search-container">
-                    <input type="text" class="search-bar" id="noteSearch" placeholder="Search notes..." oninput="searchNotes()">
-                </div>
+            <button class="new-item-btn" onclick="toggleInputs('notes')">
+                <i class="fas fa-plus"></i> New Note
+            </button>
+            <div class="search-container">
+                <input type="text" class="search-bar" id="noteSearch" placeholder="Search notes..." oninput="searchNotes()">
             </div>
-            
             <div class="input-section collapsed">
-                <div class="note-title-input-container">
-                    <input type="text" id="noteTitle" class="note-title-input" placeholder="Note title">
-                    <input type="date" id="noteDate" class="note-date-input">
+                <div class="input-group" style="width: 60%;">
+                    <input type="text" id="noteTitle" placeholder="Note title">
                 </div>
                 <button onclick="addNote()">Add Note</button>
                 
@@ -1370,20 +1303,17 @@
 
         <!-- Contacts Tab -->
         <div id="contacts" class="tab-content">
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <button class="new-item-btn" onclick="toggleInputs('contacts')">
-                    <i class="fas fa-plus"></i> New Contact
+            <button class="new-item-btn" onclick="toggleInputs('contacts')">
+                <i class="fas fa-plus"></i> New Contact
+            </button>
+            <div class="search-container">
+                <input type="text" class="search-bar" id="contactSearch" placeholder="Search contacts..." oninput="searchContacts()">
+                <button class="filter-btn" onclick="toggleFlaggedContacts()">
+                    <i class="fas fa-flag"></i> Flagged Only
                 </button>
-                <div class="search-container">
-                    <input type="text" class="search-bar" id="contactSearch" placeholder="Search contacts..." oninput="searchContacts()">
-                    <button class="filter-btn" onclick="toggleFlaggedContacts()">
-                        <i class="fas fa-flag"></i> Flagged Only
-                    </button>
-                </div>
             </div>
-            
             <div class="input-section collapsed">
-                <div class="input-group" style="flex: 1.5;">
+                <div class="input-group" style="width: 30%;">
                     <input type="text" id="contactName" placeholder="Name" class="contact-name-input">
                 </div>
                 <div class="input-group">
@@ -1398,7 +1328,7 @@
                 <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
                 <button onclick="addContact()">Add Contact</button>
                 
-                <div class="notes-container" style="width: 100%; margin-top: 10px;">
+                <div class="notes-container">
                     <textarea id="contactNotes" class="large-notes" placeholder="Notes..."></textarea>
                 </div>
             </div>
@@ -1413,15 +1343,12 @@
 
         <!-- Processes Tab -->
         <div id="processes" class="tab-content">
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <button class="new-item-btn" onclick="toggleInputs('processes')">
-                    <i class="fas fa-plus"></i> New Process
-                </button>
-                <div class="search-container">
-                    <input type="text" class="search-bar" id="processSearch" placeholder="Search processes..." oninput="searchProcesses()">
-                </div>
+            <button class="new-item-btn" onclick="toggleInputs('processes')">
+                <i class="fas fa-plus"></i> New Process
+            </button>
+            <div class="search-container">
+                <input type="text" class="search-bar" id="processSearch" placeholder="Search processes..." oninput="searchProcesses()">
             </div>
-            
             <div class="input-section collapsed">
                 <div class="input-group">
                     <input type="text" id="processTitle" placeholder="Process title">
@@ -1461,12 +1388,6 @@
         let currentCalendarDate = new Date();
         let currentCalendarView = 'weekly';
         let selectedDay = null;
-
-        // Auto-resize textarea function
-        function autoResizeTextarea(textarea) {
-            textarea.style.height = 'auto'; // Reset height
-            textarea.style.height = (textarea.scrollHeight) + 'px';
-        }
 
         // Tab Navigation
         function openTab(tabName) {
@@ -2510,12 +2431,11 @@
                           oninput="updateTaskField(${task.id}, 'title', this.innerText)">
                         ${task.title}
                     </span>
-                    <div class="complete-checkbox">
-                        <input type="checkbox" id="complete-${task.id}" ${task.completed ? 'checked' : ''} 
-                               onchange="toggleTask(${task.id})">
-                        <label for="complete-${task.id}" class="complete-checkbox-label">Complete</label>
-                    </div>
                     <div class="task-controls">
+                        <div class="complete-checkbox">
+                            <input type="checkbox" id="complete-${task.id}" ${task.completed ? 'checked' : ''} 
+                                   onchange="toggleTask(${task.id})">
+                        </div>
                         <button class="delete-btn" onclick="confirmDelete('task', ${task.id})">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -2527,7 +2447,7 @@
                     </select>
                 </div>
                 <textarea class="current-step" placeholder="Current step..." 
-                       oninput="updateTaskField(${task.id}, 'currentStep', this.value); autoResizeTextarea(this)">${task.currentStep || ''}</textarea>
+                       oninput="updateTaskField(${task.id}, 'currentStep', this.value)">${task.currentStep || ''}</textarea>
                 <div class="task-meta">
                     <div class="task-meta-item">
                         <span>Priority:</span>
@@ -2565,11 +2485,6 @@
                     <button onclick="moveTask(${task.id}, 'down')">↓</button>
                 </div>
             `;
-            
-            // Initialize auto-resize for the current step textarea
-            const currentStepTextarea = taskElement.querySelector('.current-step');
-            autoResizeTextarea(currentStepTextarea);
-            
             return taskElement;
         }
 
@@ -2697,8 +2612,9 @@
                           oninput="updateContactField(${contact.id}, 'name', this.innerText)">
                         ${contact.name}
                     </span>
-                    <textarea class="waiting-on-input" placeholder="Waiting on..." 
-                           oninput="updateContactField(${contact.id}, 'waitingOn', this.value)">${contact.waitingOn || ''}</textarea>
+                    <input type="text" class="waiting-on-input" placeholder="Waiting on..." 
+                           value="${contact.waitingOn || ''}" 
+                           oninput="updateContactField(${contact.id}, 'waitingOn', this.value)">
                     <div class="contact-controls">
                         <button class="delete-btn" onclick="confirmDelete('contact', ${contact.id})">
                             <i class="fas fa-trash"></i>
@@ -2856,7 +2772,6 @@
             const note = {
                 id: Date.now(),
                 title: document.getElementById('noteTitle').value.trim(),
-                date: document.getElementById('noteDate').value,
                 content: document.getElementById('noteContent').value,
                 created: new Date().toISOString(),
                 updated: new Date().toISOString(),
@@ -2888,15 +2803,10 @@
 
             noteElement.innerHTML = `
                 <div class="note-header">
-                    <div style="display: flex; align-items: center; flex-grow: 1;">
-                        <span class="note-title" contenteditable="true" 
-                              oninput="updateNoteField(${note.id}, 'title', this.innerText)">
-                            ${note.title}
-                        </span>
-                        <span class="note-date">
-                            ${note.date ? formatDate(note.date) : 'No date'}
-                        </span>
-                    </div>
+                    <span class="note-title" contenteditable="true" 
+                          oninput="updateNoteField(${note.id}, 'title', this.innerText)">
+                        ${note.title}
+                    </span>
                     <div class="task-controls">
                         <button class="delete-btn" onclick="confirmDelete('note', ${note.id})">
                             <i class="fas fa-trash"></i>
@@ -3244,7 +3154,6 @@
 
         function clearNoteForm() {
             document.getElementById('noteTitle').value = '';
-            document.getElementById('noteDate').value = '';
             document.getElementById('noteContent').value = '';
         }
 
