@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Collapsible Sidebar</title>
+    <title>Modern Collapsible Sidebar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -15,129 +15,186 @@
 
         body {
             background-color: #f5f7fa;
-            padding: 0;
             display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
+        /* Sidebar Styles */
         .sidebar {
-            width: 60px;
-            background-color: #2d2d2d;
+            width: 70px;
+            background-color: #2a3647;
             color: white;
             height: 100vh;
-            overflow-y: auto;
-            font-size: 10px;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: width 0.3s;
             position: relative;
         }
 
         .sidebar.expanded {
-            width: 200px;
+            width: 250px;
+            align-items: flex-start;
+            padding-left: 20px;
         }
 
-        .sidebar-logo {
-            width: 50px;
-            height: 50px;
-            margin: 10px 0;
-            background-color: #555;
-            transition: all 0.3s;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            width: 100%;
+            justify-content: center;
         }
 
-        .sidebar.expanded .sidebar-logo {
-            width: 80px;
-            height: 80px;
+        .sidebar.expanded .logo-container {
+            justify-content: flex-start;
+            padding-left: 10px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background-color: #1a2533;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .logo-text {
+            margin-left: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .sidebar.expanded .logo-text {
+            display: block;
         }
 
         .sidebar-toggle {
             position: absolute;
-            right: 5px;
-            top: 5px;
+            right: 15px;
+            top: 25px;
             background: none;
             border: none;
             color: white;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 16px;
         }
 
-        .sidebar-item {
-            padding: 8px 0;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-bottom: 8px;
+        .nav-menu {
             width: 100%;
-            text-align: center;
             display: flex;
             flex-direction: column;
+        }
+
+        .menu-item {
+            display: flex;
             align-items: center;
-            position: relative;
-        }
-
-        .sidebar-item i {
+            padding: 12px 15px;
             margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: calc(100% - 10px);
+            color: #d1d5db;
         }
 
-        .sidebar-item span {
-            font-size: 10px;
+        .menu-item:hover {
+            background-color: #1a2533;
+            color: white;
+        }
+
+        .menu-item.active {
+            background-color: #1a2533;
+            color: white;
+        }
+
+        .menu-icon {
+            font-size: 18px;
+            min-width: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .menu-text {
+            margin-left: 10px;
+            font-size: 14px;
+            font-weight: 500;
             display: none;
+            white-space: nowrap;
         }
 
-        .sidebar-item:hover {
-            background-color: #3d3d3d;
+        .sidebar.expanded .menu-text {
+            display: block;
         }
 
-        .sidebar.expanded .sidebar-item span {
-            display: inline;
-        }
-
-        .sidebar-chevron {
-            display: none;
+        .menu-chevron {
+            margin-left: auto;
+            font-size: 12px;
             transition: transform 0.3s;
+            display: none;
         }
 
-        .sidebar.expanded .sidebar-chevron {
-            display: inline-block;
+        .sidebar.expanded .menu-chevron {
+            display: block;
+        }
+
+        .menu-item.active .menu-chevron {
+            transform: rotate(180deg);
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #3e4b5e;
+            margin: 20px 0;
+            width: 80%;
         }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="sidebar-logo"></div>
+        <div class="logo-container">
+            <div class="logo">S</div>
+            <div class="logo-text">Sidebar</div>
+        </div>
         <button class="sidebar-toggle" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </button>
         
-        <div class="sidebar-item" onclick="toggleItem('calendar')">
-            <i class="fas fa-calendar"></i>
-            <span>Calendar</span>
-            <i class="fas fa-chevron-down sidebar-chevron"></i>
-        </div>
-        
-        <div class="sidebar-item" onclick="toggleItem('tasks')">
-            <i class="fas fa-tasks"></i>
-            <span>Tasks</span>
-            <i class="fas fa-chevron-down sidebar-chevron"></i>
-        </div>
-        
-        <div class="sidebar-item" onclick="toggleItem('notes')">
-            <i class="fas fa-sticky-note"></i>
-            <span>Notes</span>
-            <i class="fas fa-chevron-down sidebar-chevron"></i>
-        </div>
-        
-        <div class="sidebar-item" onclick="toggleItem('contacts')">
-            <i class="fas fa-address-book"></i>
-            <span>Contacts</span>
-            <i class="fas fa-chevron-down sidebar-chevron"></i>
-        </div>
-        
-        <div class="sidebar-item" onclick="toggleItem('processes')">
-            <i class="fas fa-project-diagram"></i>
-            <span>Processes</span>
-            <i class="fas fa-chevron-down sidebar-chevron"></i>
+        <div class="nav-menu">
+            <div class="menu-item active" onclick="setActive(this)">
+                <div class="menu-icon"><i class="fas fa-home"></i></div>
+                <div class="menu-text">Dashboard</div>
+                <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            
+            <div class="menu-item" onclick="setActive(this)">
+                <div class="menu-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="menu-text">Calendar</div>
+                <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            
+            <div class="menu-item" onclick="setActive(this)">
+                <div class="menu-icon"><i class="fas fa-tasks"></i></div>
+                <div class="menu-text">Projects</div>
+                <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="menu-item" onclick="setActive(this)">
+                <div class="menu-icon"><i class="fas fa-cog"></i></div>
+                <div class="menu-text">Settings</div>
+                <div class="menu-chevron"><i class="fas fa-chevron-down"></i></div>
+            </div>
         </div>
     </div>
 
@@ -156,10 +213,14 @@
             }
         }
 
-        function toggleItem(itemType) {
-            console.log(`${itemType} item clicked`);
-            // This would handle toggling the content for each item
-            // In a full implementation, you would show/hide content here
+        function setActive(clickedItem) {
+            // Remove active class from all items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            clickedItem.classList.add('active');
         }
     </script>
 </body>
