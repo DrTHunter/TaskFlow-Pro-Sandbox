@@ -405,19 +405,31 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 10px;
+            position: relative;
+            width: 100%;
+        }
+
+        .task-controls {
+            position: absolute;
+            right: 0;
+            top: 0;
         }
 
         .note-title {
             font-weight: bold;
             font-size: 16px;
-            flex: 0;
-            width: 65%;
+            flex: 1;
+            margin-right: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .note-date {
             font-size: 14px;
             color: #666;
             margin-left: 10px;
+            white-space: nowrap;
         }
 
         .note-title-input-container {
@@ -504,6 +516,22 @@
 
             .note-title-input {
                 width: 100% !important;
+            }
+
+            .note-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .task-controls {
+                position: static;
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+
+            .note-title {
+                margin-right: 0;
+                white-space: normal;
             }
         }
     </style>
