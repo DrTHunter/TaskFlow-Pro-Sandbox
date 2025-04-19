@@ -363,6 +363,13 @@
             flex-wrap: wrap;
         }
 
+        .contact-name-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .contact-details-row {
             display: flex;
             gap: 15px;
@@ -1027,31 +1034,19 @@
                 <i class="fas fa-flag contact-flag ${contact.flagged ? 'active' : ''}" 
                    onclick="toggleContactFlag(${contact.id})"></i>
                 <div class="contact-header">
-                    <span class="task-title" contenteditable="true" 
-                          oninput="updateContactField(${contact.id}, 'name', this.innerText)">
-                        ${contact.name}
-                    </span>
-                    <div class="contact-details-row">
+                    <div class="contact-name-title">
+                        <span class="task-title" contenteditable="true" 
+                              oninput="updateContactField(${contact.id}, 'name', this.innerText)">
+                            ${contact.name}
+                        </span>
                         <div>
-                            <span>Title:</span>
-                            <span class="editable" contenteditable="true" 
-                                  oninput="updateContactField(${contact.id}, 'jobTitle', this.innerText)">
-                                ${contact.jobTitle || 'Not specified'}
-                            </span>
+                            <span>${contact.jobTitle || 'No title'}</span>
                         </div>
                         <div>
-                            <span>Email:</span>
-                            <span class="editable" contenteditable="true" 
-                                  oninput="updateContactField(${contact.id}, 'email', this.innerText)">
-                                ${contact.email || 'Not specified'}
-                            </span>
+                            <span>${contact.email || 'No email'}</span>
                         </div>
                         <div>
-                            <span>Phone:</span>
-                            <span class="editable" contenteditable="true" 
-                                  oninput="updateContactField(${contact.id}, 'phone', this.innerText)">
-                                ${contact.phone || 'Not specified'}
-                            </span>
+                            <span>${contact.phone || 'No phone'}</span>
                         </div>
                     </div>
                     <textarea class="waiting-on-input" placeholder="Waiting on..." 
