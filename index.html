@@ -187,12 +187,11 @@
         /* Contacts Tab Specific Styles */
         .input-section {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
             margin-bottom: 15px;
             transition: all 0.3s ease;
             overflow: hidden;
-            align-items: flex-end;
             border-bottom: 1px solid #ddd;
             padding-bottom: 15px;
             padding: 15px;
@@ -206,6 +205,13 @@
             border-bottom: none;
             padding-bottom: 0;
             padding: 0 15px;
+        }
+
+        .contact-input-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            flex-wrap: wrap;
         }
 
         .input-group {
@@ -349,93 +355,30 @@
             top: 8px;
         }
 
-        .contact-details {
-            margin: 5px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .contact-details div {
-            margin: 2px 0;
-            padding: 2px;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .contact-details span {
-            display: inline-block;
-            min-width: 60px;
-            color: #555;
-            font-size: 13px;
-        }
-
-        .contact-details .editable {
-            border: none;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 13px;
-            min-width: 150px;
-            margin-left: 5px;
-        }
-
-        .contact-details .editable:focus {
-            outline: none;
-            background-color: #f0f0f0;
-        }
-
-        .new-item-btn {
-            min-width: 120px;
-            margin-right: 10px;
-            padding: 8px 15px;
-            font-size: 13px;
-            background-color: #28a745;
-        }
-
-        .reset-btn {
-            background-color: #dc3545;
-            margin-top: 15px;
-        }
-
-        .new-subheading-bar {
-            display: flex;
-            gap: 5px;
-            margin: 10px 15px;
-            height: 30px;
-            background-color: #e0e0e0;
-            padding: 5px 10px;
-            border-radius: 4px;
-            align-items: center;
-        }
-
-        .new-subheading-input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 2px 5px;
-            height: 20px;
-        }
-
-        .new-subheading-input:focus {
-            outline: none;
-            background: white;
-        }
-
-        .collapsible-content {
-            max-height: 1000px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .collapsible-content.collapsed {
-            max-height: 0;
-        }
-
         .contact-header {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-left: 25px;
+            flex-wrap: wrap;
+        }
+
+        .contact-details-row {
+            display: flex;
+            gap: 15px;
+            margin-left: 10px;
+            flex-wrap: wrap;
+        }
+
+        .contact-details-row > div {
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-details-row span {
+            color: #555;
+            font-size: 13px;
+            margin-right: 5px;
         }
 
         .contact-flag {
@@ -452,18 +395,14 @@
         }
 
         .waiting-on-input {
+            width: 100% !important;
+            min-width: 400px;
             height: 36px;
-            width: 300px !important;
             margin-left: 0 !important;
-            margin-right: 10px;
-            padding: 5px;
+            padding: 8px;
             font-size: 13px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            resize: none;
-            min-height: 36px;
-            max-height: none;
-            overflow-y: auto;
         }
 
         .notes-header {
@@ -526,6 +465,53 @@
             align-items: center;
             margin-bottom: 15px;
             padding: 0 15px;
+        }
+
+        .new-item-btn {
+            min-width: 120px;
+            margin-right: 10px;
+            padding: 8px 15px;
+            font-size: 13px;
+            background-color: #28a745;
+        }
+
+        .reset-btn {
+            background-color: #dc3545;
+            margin-top: 15px;
+        }
+
+        .new-subheading-bar {
+            display: flex;
+            gap: 5px;
+            margin: 10px 15px;
+            height: 30px;
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            align-items: center;
+        }
+
+        .new-subheading-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 2px 5px;
+            height: 20px;
+        }
+
+        .new-subheading-input:focus {
+            outline: none;
+            background: white;
+        }
+
+        .collapsible-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
         }
 
         @media (max-width: 768px) {
@@ -593,6 +579,13 @@
             .contact-name-input,
             .waiting-on-input {
                 width: 100% !important;
+                min-width: auto !important;
+            }
+
+            .contact-details-row {
+                flex-direction: column;
+                gap: 5px;
+                margin-left: 0;
             }
         }
     </style>
@@ -689,28 +682,32 @@
             </div>
             
             <div class="input-section collapsed">
-                <div class="input-group" style="flex: 1.5;">
-                    <label for="contactName">Name</label>
-                    <input type="text" id="contactName" placeholder="Name" class="contact-name-input">
+                <div class="contact-input-row">
+                    <div class="input-group" style="flex: 1.5;">
+                        <label for="contactName">Name</label>
+                        <input type="text" id="contactName" placeholder="Name" class="contact-name-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="contactJobTitle">Job Title</label>
+                        <input type="text" id="contactJobTitle" placeholder="Job Title">
+                    </div>
+                    <div class="input-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" placeholder="Email">
+                    </div>
+                    <div class="input-group">
+                        <label for="contactPhone">Phone</label>
+                        <input type="tel" id="contactPhone" placeholder="Phone">
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="contactJobTitle">Job Title</label>
-                    <input type="text" id="contactJobTitle" placeholder="Job Title">
-                </div>
-                <div class="input-group">
-                    <label for="contactEmail">Email</label>
-                    <input type="email" id="contactEmail" placeholder="Email">
-                </div>
-                <div class="input-group">
-                    <label for="contactPhone">Phone</label>
-                    <input type="tel" id="contactPhone" placeholder="Phone">
-                </div>
-                <div class="input-group">
-                    <label for="contactWaitingOn">Waiting On</label>
-                    <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
-                </div>
-                <div class="input-group" style="align-self: flex-end;">
-                    <button onclick="addContact()" style="margin-top: 20px;">Add Contact</button>
+                <div class="contact-input-row">
+                    <div class="input-group" style="flex: 3;">
+                        <label for="contactWaitingOn">Waiting On</label>
+                        <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
+                    </div>
+                    <div class="input-group" style="align-self: flex-end;">
+                        <button onclick="addContact()">Add Contact</button>
+                    </div>
                 </div>
                 
                 <div class="notes-container" style="width: 100%; margin-top: 10px;">
@@ -1022,7 +1019,6 @@
             contactElement.className = 'contact-item';
             contactElement.setAttribute('data-id', contact.id);
             
-            // Subheading selector
             const subheadingOptions = contactSubheadings.map(sh => 
                 `<option value="${sh}" ${contact.subheading === sh ? 'selected' : ''}>${sh}</option>`
             ).join('');
@@ -1035,6 +1031,29 @@
                           oninput="updateContactField(${contact.id}, 'name', this.innerText)">
                         ${contact.name}
                     </span>
+                    <div class="contact-details-row">
+                        <div>
+                            <span>Title:</span>
+                            <span class="editable" contenteditable="true" 
+                                  oninput="updateContactField(${contact.id}, 'jobTitle', this.innerText)">
+                                ${contact.jobTitle || 'Not specified'}
+                            </span>
+                        </div>
+                        <div>
+                            <span>Email:</span>
+                            <span class="editable" contenteditable="true" 
+                                  oninput="updateContactField(${contact.id}, 'email', this.innerText)">
+                                ${contact.email || 'Not specified'}
+                            </span>
+                        </div>
+                        <div>
+                            <span>Phone:</span>
+                            <span class="editable" contenteditable="true" 
+                                  oninput="updateContactField(${contact.id}, 'phone', this.innerText)">
+                                ${contact.phone || 'Not specified'}
+                            </span>
+                        </div>
+                    </div>
                     <textarea class="waiting-on-input" placeholder="Waiting on..." 
                            oninput="updateContactField(${contact.id}, 'waitingOn', this.value)">${contact.waitingOn || ''}</textarea>
                     <div class="contact-controls">
@@ -1047,29 +1066,6 @@
                     <select onchange="updateContactField(${contact.id}, 'subheading', this.value)">
                         ${subheadingOptions}
                     </select>
-                </div>
-                <div class="contact-details">
-                    <div>
-                        <span>Title:</span>
-                        <span class="editable" contenteditable="true" 
-                              oninput="updateContactField(${contact.id}, 'jobTitle', this.innerText)">
-                            ${contact.jobTitle || 'Not specified'}
-                        </span>
-                    </div>
-                    <div>
-                        <span>Email:</span>
-                        <span class="editable" contenteditable="true" 
-                              oninput="updateContactField(${contact.id}, 'email', this.innerText)">
-                            ${contact.email || 'Not specified'}
-                        </span>
-                    </div>
-                    <div>
-                        <span>Phone:</span>
-                        <span class="editable" contenteditable="true" 
-                              oninput="updateContactField(${contact.id}, 'phone', this.innerText)">
-                            ${contact.phone || 'Not specified'}
-                        </span>
-                    </div>
                 </div>
                 <div class="notes-header" onclick="toggleNotes(this)">
                     Notes
