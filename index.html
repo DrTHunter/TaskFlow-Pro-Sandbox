@@ -414,8 +414,11 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            resize: vertical;
+            resize: none;
             font-size: 14px;
+            line-height: 1.4;
+            overflow-y: hidden;
+            word-wrap: break-word;
         }
 
         .star-rating {
@@ -897,10 +900,21 @@
             textarea.style.height = (textarea.scrollHeight) + 'px';
         }
 
-        // Add this function to handle auto-resizing of the notes text box
+        // Auto-resize notes textarea
         function autoResizeNotes(textarea) {
             textarea.style.height = 'auto'; // Reset height to calculate the new height
             textarea.style.height = textarea.scrollHeight + 'px'; // Set height to fit content
+        }
+
+        // Initialize auto-resize for taskNotes
+        function initAutoResize() {
+            const notesTextarea = document.getElementById('taskNotes');
+            if (notesTextarea) {
+                autoResizeNotes(notesTextarea);
+                notesTextarea.addEventListener('input', function() {
+                    autoResizeNotes(this);
+                });
+            }
         }
 
         // Toggle settings menu
@@ -920,6 +934,11 @@
                 toggleBtn.innerHTML = '<i class="fas fa-plus"></i> New Task';
             } else {
                 toggleBtn.innerHTML = 'Hide Form';
+                // Ensure the notes textarea is properly sized when shown
+                const notesTextarea = document.getElementById('taskNotes');
+                if (notesTextarea) {
+                    autoResizeNotes(notesTextarea);
+                }
             }
         }
 
@@ -1318,7 +1337,7 @@
                     Notes
                 </div>
                 <div class="notes-content">
-                    <textarea oninput="updateTaskField(${task.id}, 'notes', this.value)"
+                    <textarea oninput="updateTaskField(${task.id}, 'notes', this.value); autoResizeNotes(this)"
                               style="width:100%; min-height: 120px;">${task.notes}</textarea>
                 </div>
                 <div class="move-buttons">
@@ -1330,6 +1349,22 @@
             // Initialize auto-resize for the current step textarea
             const currentStepTextarea = taskElement.querySelector('.current-step');
             autoResizeTextarea(currentStepTextarea);
+            
+            // Initialize auto-resize for the notes textarea if expanded
+            const notesHeader = taskElement.querySelector('.notes-header');
+            const notesContent = taskElement.querySelector('.notes-content');
+            const notesTextarea = taskElement.querySelector('.notes-content textarea');
+            
+            if (notesTextarea) {
+                notesTextarea.addEventListener('input', function() {
+                    autoResizeNotes(this);
+                });
+                
+                // If notes are expanded, resize them initially
+                if (notesContent.classList.contains('expanded')) {
+                    autoResizeNotes(notesTextarea);
+                }
+            }
             
             return taskElement;
         }
@@ -1505,6 +1540,9 @@
             document.getElementById('taskStart').value = '';
             document.getElementById('taskDue').value = '';
             document.getElementById('taskNotes').value = '';
+            // Reset textarea height
+            const notesTextarea = document.getElementById('taskNotes');
+            notesTextarea.style.height = 'auto';
             // Reset star rating
             selectedPriority = 1;
             const stars = document.querySelectorAll('#priorityStars i');
@@ -1534,6 +1572,7 @@
         window.onload = () => {
             setupStarRating();
             renderTasks();
+            initAutoResize();
             
             // Collapse all input sections by default
             document.querySelectorAll('.input-section').forEach(section => {
