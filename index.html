@@ -897,6 +897,12 @@
             textarea.style.height = (textarea.scrollHeight) + 'px';
         }
 
+        // Add this function to handle auto-resizing of the notes text box
+        function autoResizeNotes(textarea) {
+            textarea.style.height = 'auto'; // Reset height to calculate the new height
+            textarea.style.height = textarea.scrollHeight + 'px'; // Set height to fit content
+        }
+
         // Toggle settings menu
         function toggleSettingsMenu() {
             const menu = document.getElementById('settingsMenu');
@@ -1428,6 +1434,13 @@
         function toggleNotes(header) {
             const content = header.nextElementSibling;
             content.classList.toggle('expanded');
+
+            // Automatically resize all textareas inside the expanded notes content
+            const textareas = content.querySelectorAll('textarea');
+            textareas.forEach(textarea => {
+                autoResizeNotes(textarea);
+                textarea.addEventListener('input', () => autoResizeNotes(textarea));
+            });
         }
 
         function searchTasks() {
@@ -1532,3 +1545,4 @@
     </script>
 </body>
 </html>
+``` 
