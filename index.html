@@ -598,6 +598,40 @@
             line-height: 30px !important;
         }
 
+        /* Completed tasks section styles */
+        .completed-section {
+            margin-top: 20px;
+        }
+
+        .completed-header {
+            background-color: #e0e0e0;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .completed-header i {
+            transition: transform 0.3s;
+        }
+
+        .completed-header.collapsed i {
+            transform: rotate(-90deg);
+        }
+
+        .completed-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .completed-content.collapsed {
+            max-height: 0;
+        }
+
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -823,8 +857,14 @@
             <div class="task-list" id="tasksList">
                 <h3 class="current-header">Current Tasks</h3>
                 <div id="currentList"></div>
-                <h3 class="completed-header">Completed Tasks</h3>
-                <div id="doneList"></div>
+                
+                <div class="completed-section">
+                    <div class="completed-header" onclick="toggleCompletedTasks()">
+                        <span>Completed Tasks</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="completed-content" id="doneList"></div>
+                </div>
             </div>
         </div>
 
@@ -893,6 +933,7 @@
         let selectedColor = '#1a73e8';
         let taskSubheadings = JSON.parse(localStorage.getItem('taskSubheadings')) || ['General'];
         let collapsedSubheadings = JSON.parse(localStorage.getItem('collapsedSubheadings')) || {};
+        let completedTasksCollapsed = JSON.parse(localStorage.getItem('completedTasksCollapsed')) || false;
 
         // Auto-resize textarea function
         function autoResizeTextarea(textarea) {
@@ -942,6 +983,18 @@
             }
         }
 
+        // Toggle completed tasks visibility
+        function toggleCompletedTasks() {
+            const doneList = document.querySelector('.completed-content');
+            const header = document.querySelector('.completed-header');
+            
+            doneList.classList.toggle('collapsed');
+            header.classList.toggle('collapsed');
+            
+            completedTasksCollapsed = !completedTasksCollapsed;
+            localStorage.setItem('completedTasksCollapsed', JSON.stringify(completedTasksCollapsed));
+        }
+
         // Reset all data
         function resetAllData() {
             if (confirm('Are you sure you want to delete ALL data? This cannot be undone.')) {
@@ -949,6 +1002,7 @@
                 tasks = [];
                 taskSubheadings = ['General'];
                 collapsedSubheadings = {};
+                completedTasksCollapsed = false;
                 
                 saveAllData();
                 renderTasks();
@@ -959,6 +1013,7 @@
             localStorage.setItem('tasks', JSON.stringify(tasks));
             localStorage.setItem('taskSubheadings', JSON.stringify(taskSubheadings));
             localStorage.setItem('collapsedSubheadings', JSON.stringify(collapsedSubheadings));
+            localStorage.setItem('completedTasksCollapsed', JSON.stringify(completedTasksCollapsed));
         }
 
         // Subheading functions
@@ -966,7 +1021,23 @@
             const listContainer = document.getElementById('tasksList');
             
             // Clear the containers
-            listContainer.innerHTML = '<h3 class="current-header">Current Tasks</h3><div id="currentList"></div><h3 class="completed-header">Completed Tasks</h3><div id="doneList"></div>';
+            listContainer.innerHTML = `
+                <h3 class="current-header">Current Tasks</h3>
+                <div id="currentList"></div>
+                <div class="completed-section">
+                    <div class="completed-header" onclick="toggleCompletedTasks()">
+                        <span>Completed Tasks</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="completed-content" id="doneList"></div>
+                </div>
+            `;
+            
+            // Set initial collapsed state for completed tasks
+            if (completedTasksCollapsed) {
+                document.querySelector('.completed-content').classList.add('collapsed');
+                document.querySelector('.completed-header').classList.add('collapsed');
+            }
             
             taskSubheadings.forEach((subheading, index) => {
                 // Render items for this subheading in the list container
@@ -1487,7 +1558,23 @@
             );
             
             const tasksList = document.getElementById('tasksList');
-            tasksList.innerHTML = '<h3 class="current-header">Current Tasks</h3><div id="currentList"></div><h3 class="completed-header">Completed Tasks</h3><div id="doneList"></div>';
+            tasksList.innerHTML = `
+                <h3 class="current-header">Current Tasks</h3>
+                <div id="currentList"></div>
+                <div class="completed-section">
+                    <div class="completed-header" onclick="toggleCompletedTasks()">
+                        <span>Completed Tasks</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="completed-content" id="doneList"></div>
+                </div>
+            `;
+            
+            // Set initial collapsed state for completed tasks in search results
+            if (completedTasksCollapsed) {
+                document.querySelector('.completed-content').classList.add('collapsed');
+                document.querySelector('.completed-header').classList.add('collapsed');
+            }
             
             // Group by subheading
             const currentGrouped = {};
