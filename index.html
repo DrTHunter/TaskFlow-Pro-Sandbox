@@ -690,21 +690,31 @@
             
             <div class="input-section collapsed">
                 <div class="input-group" style="flex: 1.5;">
+                    <label for="contactName">Name</label>
                     <input type="text" id="contactName" placeholder="Name" class="contact-name-input">
                 </div>
                 <div class="input-group">
+                    <label for="contactJobTitle">Job Title</label>
                     <input type="text" id="contactJobTitle" placeholder="Job Title">
                 </div>
                 <div class="input-group">
+                    <label for="contactEmail">Email</label>
                     <input type="email" id="contactEmail" placeholder="Email">
                 </div>
                 <div class="input-group">
+                    <label for="contactPhone">Phone</label>
                     <input type="tel" id="contactPhone" placeholder="Phone">
                 </div>
-                <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
-                <button onclick="addContact()">Add Contact</button>
+                <div class="input-group">
+                    <label for="contactWaitingOn">Waiting On</label>
+                    <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
+                </div>
+                <div class="input-group" style="align-self: flex-end;">
+                    <button onclick="addContact()" style="margin-top: 20px;">Add Contact</button>
+                </div>
                 
                 <div class="notes-container" style="width: 100%; margin-top: 10px;">
+                    <label for="contactNotes">Notes</label>
                     <textarea id="contactNotes" class="large-notes" placeholder="Notes..."></textarea>
                 </div>
             </div>
