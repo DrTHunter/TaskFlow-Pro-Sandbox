@@ -189,7 +189,6 @@
             margin-bottom: 15px;
             transition: all 0.3s ease;
             overflow: hidden;
-            align-items: flex-end;
             border-bottom: 1px solid #ddd;
             padding-bottom: 15px;
             margin: 15px;
@@ -207,7 +206,7 @@
         .wide-input-section {
             display: flex;
             flex-wrap: wrap;
-            align-items: flex-end;
+            gap: 10px;
         }
 
         .wide-input-section .input-group:first-child {
@@ -223,6 +222,11 @@
         .wide-input-section button {
             margin-left: auto;
             height: 36px;
+            align-self: center;
+        }
+
+        #taskTitle {
+            margin-top: 15px;
         }
 
         .input-group {
