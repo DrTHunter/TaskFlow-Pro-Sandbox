@@ -210,24 +210,21 @@
             display: flex;
             width: 100%;
             flex-wrap: wrap;
-            gap: 0; /* Remove gap to use margins instead */
+            gap: 0;
         }
 
-        /* Make Name & Job Title larger (flex: 2) */
         .input-group:nth-child(1),
         .input-group:nth-child(2) {
-            flex: 2; /* Bigger than Email/Phone */
-            margin-right: 1%; /* Adds even spacing */
+            flex: 2;
+            margin-right: 2%;
         }
 
-        /* Make Email & Phone smaller (flex: 1.5) */
         .input-group:nth-child(3),
         .input-group:nth-child(4) {
-            flex: 1;
-            margin-right: 1%; /* Adds even spacing */
+            flex: 1.5;
+            margin-right: 2%;
         }
 
-        /* Remove margin from the last element */
         .input-group:last-child {
             margin-right: 0;
         }
@@ -252,7 +249,7 @@
         }
 
         button {
-            padding: 8px 15px;
+            padding: 6px 12px;
             background-color: #1a73e8;
             color: white;
             border: none;
@@ -265,6 +262,13 @@
 
         button:hover {
             filter: brightness(0.9);
+        }
+
+        .new-item-btn {
+            padding: 6px 12px;
+            font-size: 13px;
+            background-color: #28a745;
+            min-width: auto;
         }
 
         .contact-item {
@@ -313,8 +317,8 @@
         }
 
         .filter-btn {
-            padding: 8px 12px;
-            font-size: 12px;
+            padding: 6px 12px;
+            font-size: 13px;
             background-color: #6c757d;
         }
 
@@ -482,14 +486,6 @@
             align-items: center;
             margin-bottom: 15px;
             padding: 0 15px;
-        }
-
-        .new-item-btn {
-            min-width: 120px;
-            margin-right: 10px;
-            padding: 8px 15px;
-            font-size: 13px;
-            background-color: #28a745;
         }
 
         .reset-btn {
