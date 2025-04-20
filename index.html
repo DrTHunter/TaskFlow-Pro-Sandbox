@@ -172,29 +172,28 @@
             color: #333;
         }
 
-        /* Tab Content Styles */
         .tab-content {
             display: none;
+            padding: 20px;
             overflow-y: auto;
             flex: 1;
-            padding: 0;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        /* Contacts Tab Specific Styles */
+        /* Notes Tab Specific Styles */
         .input-section {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 15px;
             transition: all 0.3s ease;
             overflow: hidden;
+            align-items: flex-end;
             border-bottom: 1px solid #ddd;
             padding-bottom: 15px;
-            padding: 15px;
         }
 
         .input-section.collapsed {
@@ -204,29 +203,9 @@
             visibility: hidden;
             border-bottom: none;
             padding-bottom: 0;
-            padding: 0 15px;
         }
 
-        .contact-input-row {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            flex-wrap: wrap;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            min-width: 150px;
-        }
-
-        .input-group label {
-            font-size: 12px;
-            margin-bottom: 4px;
-            color: #555;
-        }
-
-        input, select, textarea {
+        input, textarea {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -250,23 +229,63 @@
             filter: brightness(0.9);
         }
 
-        .contact-item {
-            padding: 8px 12px;
+        .note-item {
+            padding: 12px;
             background-color: white;
             margin-bottom: 8px;
             border-radius: 4px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             position: relative;
-            margin: 8px 15px;
         }
 
-        .contact-controls {
-            position: absolute;
-            top: 8px;
-            right: 12px;
+        /* Updated Notes Header and Content Styles */
+        .notes-header {
             display: flex;
-            gap: 8px;
             align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            cursor: pointer;
+            color: #1a73e8;
+            font-size: 0.9em;
+        }
+
+        .notes-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .notes-content.expanded {
+            max-height: 1000px;
+        }
+
+        .note-content {
+            width: 100%;
+            min-height: 120px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-y: auto;
+            background-color: white;
+        }
+
+        .note-content[contenteditable="true"] {
+            outline: none;
+        }
+
+        .note-content[contenteditable="true"]:empty:before {
+            content: attr(placeholder);
+            color: #999;
+            pointer-events: none;
+            display: block;
+        }
+
+        .note-content[contenteditable="true"]:focus {
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 1px #1a73e8;
         }
 
         .delete-btn {
@@ -274,9 +293,9 @@
             padding: 6px 12px;
         }
 
-        .contact-move-buttons {
+        .move-buttons {
             position: absolute;
-            top: 40px;
+            top: 50px;
             right: 12px;
             display: flex;
             gap: 5px;
@@ -295,31 +314,15 @@
             margin-left: 10px;
         }
 
-        .filter-btn {
-            padding: 8px 12px;
-            font-size: 12px;
-            background-color: #6c757d;
-        }
-
         .notes-container {
             width: 100%;
             margin-top: 15px;
         }
         
-        .large-notes {
-            width: 100%;
-            min-height: 150px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            resize: vertical;
-            font-size: 14px;
-        }
-
         .subheading {
             background-color: #e0e0e0;
             padding: 5px 10px;
-            margin: 10px 15px;
+            margin: 10px 0;
             border-radius: 4px;
             font-weight: bold;
             display: flex;
@@ -349,122 +352,10 @@
             margin-left: 10px;
         }
 
-        .contact-subheading-selector {
+        .note-subheading-selector {
             position: absolute;
             right: 50px;
-            top: 8px;
-        }
-
-        .contact-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-left: 25px;
-            flex-wrap: wrap;
-        }
-
-        .contact-details-row {
-            display: flex;
-            gap: 15px;
-            margin-left: 10px;
-            flex-wrap: wrap;
-        }
-
-        .contact-details-row > div {
-            display: flex;
-            align-items: center;
-        }
-
-        .contact-details-row span {
-            color: #555;
-            font-size: 13px;
-            margin-right: 5px;
-        }
-
-        .contact-flag {
-            color: #ddd;
-            cursor: pointer;
-            position: absolute;
-            left: 15px;
-            top: 15px;
-            font-size: 16px;
-        }
-
-        .contact-flag.active {
-            color: #ffc107;
-        }
-
-        .waiting-on-input {
-            width: 100% !important;
-            min-width: 400px;
-            height: 36px;
-            margin-left: 0 !important;
-            padding: 8px;
-            font-size: 13px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-
-        .notes-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 10px 0;
-            cursor: pointer;
-            color: #1a73e8;
-            font-size: 0.9em;
-        }
-
-        .notes-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .notes-content.expanded {
-            max-height: 1000px;
-        }
-
-        .settings-menu {
-            display: none;
-            position: absolute;
-            right: 10px;
-            top: 50px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
-
-        .settings-menu.active {
-            display: block;
-        }
-
-        /* Contact Name and Waiting On adjustments */
-        .contact-name-input {
-            width: 60% !important;
-        }
-
-        /* Subheading controls spacing */
-        .subheading-controls {
-            gap: 8px !important;
-            margin-left: 15px !important;
-        }
-
-        /* Add button sizing */
-        .new-subheading-bar button {
-            height: 30px !important;
-            padding: 0 10px !important;
-            line-height: 30px !important;
-        }
-
-        .contacts-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 0 15px;
+            top: 12px;
         }
 
         .new-item-btn {
@@ -475,15 +366,10 @@
             background-color: #28a745;
         }
 
-        .reset-btn {
-            background-color: #dc3545;
-            margin-top: 15px;
-        }
-
         .new-subheading-bar {
             display: flex;
             gap: 5px;
-            margin: 10px 15px;
+            margin: 10px 0;
             height: 30px;
             background-color: #e0e0e0;
             padding: 5px 10px;
@@ -512,6 +398,53 @@
 
         .collapsible-content.collapsed {
             max-height: 0;
+        }
+
+        .note-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            position: relative;
+            width: 100%;
+        }
+
+        .task-controls {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .note-title {
+            font-weight: bold;
+            font-size: 16px;
+            flex: 1;
+            margin-right: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .note-date {
+            font-size: 14px;
+            color: #666;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        .note-title-input-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .note-title-input {
+            width: 50% !important;
+        }
+
+        .note-date-input {
+            width: 150px !important;
         }
 
         @media (max-width: 768px) {
@@ -561,7 +494,12 @@
                 height: auto;
             }
 
-            /* Contacts responsive styles */
+            .tab-button {
+                flex: 1;
+                padding: 10px;
+                font-size: 12px;
+            }
+            
             .input-section {
                 flex-direction: column;
             }
@@ -570,22 +508,37 @@
                 padding: 6px 12px;
             }
 
-            .contact-subheading-selector {
+            .note-subheading-selector {
                 position: static;
                 margin-top: 5px;
                 width: 100%;
             }
 
-            .contact-name-input,
-            .waiting-on-input {
+            .note-title-input {
                 width: 100% !important;
-                min-width: auto !important;
             }
 
-            .contact-details-row {
+            .note-header {
                 flex-direction: column;
-                gap: 5px;
-                margin-left: 0;
+                align-items: flex-start;
+            }
+
+            .task-controls {
+                position: static;
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+
+            .note-title {
+                margin-right: 0;
+                white-space: normal;
+            }
+
+            .contact-input-row {
+                display: flex;
+                gap: 10px; /* This adds 10px spacing between child elements */
+                width: 100%;
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -663,75 +616,39 @@
 
         <!-- Notes Tab -->
         <div id="notes" class="tab-content">
-            <h2>Notes</h2>
-            <p>This would contain your note-taking functionality.</p>
-        </div>
-
-        <!-- Contacts Tab -->
-        <div id="contacts" class="tab-content">
-            <div class="contacts-header">
-                <button class="new-item-btn" onclick="toggleInputs('contacts')">
-                    <i class="fas fa-plus"></i> New Contact
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                <button class="new-item-btn" onclick="toggleInputs('notes')">
+                    <i class="fas fa-plus"></i> New Note
                 </button>
                 <div class="search-container">
-                    <input type="text" class="search-bar" id="contactSearch" placeholder="Search contacts..." oninput="searchContacts()">
-                    <button class="filter-btn" onclick="toggleFlaggedContacts()">
-                        <i class="fas fa-flag"></i> Flagged Only
-                    </button>
+                    <input type="text" class="search-bar" id="noteSearch" placeholder="Search notes..." oninput="searchNotes()">
                 </div>
             </div>
             
             <div class="input-section collapsed">
-                <div class="contact-input-row">
-                    <!-- Name (Wider) -->
-                    <div class="input-group" style="flex: 1.5;">
-                        <label for="contactName">Name</label>
-                        <input type="text" id="contactName" placeholder="Name" class="contact-name-input">
-                    </div>
-                    
-                    <!-- Job Title -->
-                    <div class="input-group" style="flex: 1.5;">
-                        <label for="contactJobTitle">Job Title</label>
-                        <input type="text" id="contactJobTitle" placeholder="Job Title">
-                    </div>
-                    
-                    <!-- Email -->
-                    <div class="input-group">
-                        <label for="contactEmail">Email</label>
-                        <input type="email" id="contactEmail" placeholder="Email">
-                    </div>
-                    
-                    <!-- Phone -->
-                    <div class="input-group">
-                        <label for="contactPhone">Phone</label>
-                        <input type="tel" id="contactPhone" placeholder="Phone">
-                    </div>
+                <div class="note-title-input-container">
+                    <input type="text" id="noteTitle" class="note-title-input" placeholder="Note title">
+                    <input type="date" id="noteDate" class="note-date-input">
                 </div>
+                <button onclick="addNote()">Add Note</button>
                 
-                <!-- Waiting On (Full Width Below) -->
-                <div class="contact-input-row">
-                    <div class="input-group" style="flex: 3;">
-                        <label for="contactWaitingOn">Waiting On</label>
-                        <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
-                    </div>
-                    <div class="input-group" style="align-self: flex-end;">
-                        <button onclick="addContact()">Add Contact</button>
-                    </div>
-                </div>
-                
-                <!-- Notes (Full Width Below) -->
-                <div class="notes-container" style="width: 100%; margin-top: 10px;">
-                    <label for="contactNotes">Notes</label>
-                    <textarea id="contactNotes" class="large-notes" placeholder="Notes..."></textarea>
+                <div class="notes-container">
+                    <div id="noteContent" class="note-content" contenteditable="true" placeholder="Note content..."></div>
                 </div>
             </div>
             
             <div class="new-subheading-bar">
-                <input type="text" id="newContactSubheading" class="new-subheading-input" placeholder="New subheading name">
-                <button onclick="addSubheading('contact')">Add</button>
+                <input type="text" id="newNoteSubheading" class="new-subheading-input" placeholder="New subheading name">
+                <button onclick="addSubheading('note')">Add</button>
             </div>
             
-            <div id="contactsList"></div>
+            <div id="notesList"></div>
+        </div>
+
+        <!-- Contacts Tab -->
+        <div id="contacts" class="tab-content">
+            <h2>Contacts</h2>
+            <p>This would contain your contact management system.</p>
         </div>
 
         <!-- Process Tab -->
@@ -780,18 +697,11 @@
             document.getElementById('contentTitle').textContent = titleMap[tabName];
         }
 
-        // Contacts Tab Functionality
+        // Notes Tab Functionality
         // Data Management
-        let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
-        let contactSubheadings = JSON.parse(localStorage.getItem('contactSubheadings')) || ['General'];
+        let notes = JSON.parse(localStorage.getItem('notes')) || [];
+        let noteSubheadings = JSON.parse(localStorage.getItem('noteSubheadings')) || ['General'];
         let collapsedSubheadings = JSON.parse(localStorage.getItem('collapsedSubheadings')) || {};
-        let showFlaggedOnly = false;
-
-        // Auto-resize textarea function
-        function autoResizeTextarea(textarea) {
-            textarea.style.height = 'auto'; // Reset height
-            textarea.style.height = (textarea.scrollHeight) + 'px';
-        }
 
         // Toggle input sections
         function toggleInputs(tab) {
@@ -801,52 +711,34 @@
             inputSection.classList.toggle('collapsed');
             
             if (inputSection.classList.contains('collapsed')) {
-                toggleBtn.innerHTML = '<i class="fas fa-plus"></i> New Contact';
+                toggleBtn.innerHTML = '<i class="fas fa-plus"></i> New Note';
             } else {
                 toggleBtn.innerHTML = 'Hide Form';
             }
         }
 
-        // Toggle flagged contacts filter
-        function toggleFlaggedContacts() {
-            showFlaggedOnly = !showFlaggedOnly;
-            renderContacts();
-        }
-
-        // Reset all data
-        function resetAllData() {
-            if (confirm('Are you sure you want to delete ALL data? This cannot be undone.')) {
-                localStorage.clear();
-                contacts = [];
-                contactSubheadings = ['General'];
-                collapsedSubheadings = {};
-                
-                saveAllData();
-                renderContacts();
-            }
-        }
-
-        function saveAllData() {
-            localStorage.setItem('contacts', JSON.stringify(contacts));
-            localStorage.setItem('contactSubheadings', JSON.stringify(contactSubheadings));
+        function saveNotes() { 
+            localStorage.setItem('notes', JSON.stringify(notes)); 
+            localStorage.setItem('noteSubheadings', JSON.stringify(noteSubheadings));
             localStorage.setItem('collapsedSubheadings', JSON.stringify(collapsedSubheadings));
         }
 
         // Subheading functions
         function renderSubheadings(type) {
-            const listContainer = document.getElementById('contactsList');
+            const listContainer = document.getElementById('notesList');
+            const subheadings = noteSubheadings;
+            
+            // Clear the container
             listContainer.innerHTML = '';
             
-            contactSubheadings.forEach((subheading, index) => {
+            subheadings.forEach((subheading, index) => {
                 // Render items for this subheading in the list container
                 renderItemsForSubheading(type, subheading, listContainer, index);
             });
         }
 
         function renderItemsForSubheading(type, subheading, container, index) {
-            let items = showFlaggedOnly ? 
-                contacts.filter(c => c.subheading === subheading && c.flagged) :
-                contacts.filter(c => c.subheading === subheading);
+            let items = notes.filter(n => n.subheading === subheading);
             
             if (items.length === 0) return;
             
@@ -893,7 +785,7 @@
                 e.stopPropagation();
                 moveSubheading(type, index, 'down');
             };
-            downBtn.disabled = index === contactSubheadings.length - 1;
+            downBtn.disabled = index === noteSubheadings.length - 1;
             
             const removeBtn = document.createElement('button');
             removeBtn.innerHTML = '×';
@@ -903,7 +795,7 @@
                 e.stopPropagation();
                 removeSubheading(type, index);
             };
-            removeBtn.disabled = contactSubheadings.length <= 1;
+            removeBtn.disabled = noteSubheadings.length <= 1;
             
             controls.appendChild(upBtn);
             controls.appendChild(downBtn);
@@ -916,21 +808,74 @@
             const contentContainer = document.createElement('div');
             contentContainer.className = `collapsible-content ${isCollapsed ? 'collapsed' : ''}`;
             
+            // For notes
             container.appendChild(subheadingElement);
             container.appendChild(contentContainer);
             
             // Add items
-            items.forEach(item => {
-                const element = createContactElement(item);
+            items.forEach(note => {
+                const element = createNoteElement(note);
                 contentContainer.appendChild(element);
             });
         }
 
+        function createNoteElement(note) {
+            const noteElement = document.createElement('div');
+            noteElement.className = 'note-item';
+            noteElement.setAttribute('data-id', note.id);
+            
+            // Subheading selector
+            const subheadingOptions = noteSubheadings.map(sh => 
+                `<option value="${sh}" ${note.subheading === sh ? 'selected' : ''}>${sh}</option>`
+            ).join('');
+
+            noteElement.innerHTML = `
+                <div class="note-header">
+                    <div style="display: flex; align-items: center; flex-grow: 1;">
+                        <span class="note-title" contenteditable="true" 
+                              oninput="updateNoteField(${note.id}, 'title', this.innerText)">
+                            ${note.title}
+                        </span>
+                        <span class="note-date">
+                            ${note.date ? formatDate(note.date) : 'No date'}
+                        </span>
+                    </div>
+                    <div class="task-controls">
+                        <button class="delete-btn" onclick="confirmDelete('note', ${note.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="note-subheading-selector">
+                    <select onchange="updateNoteField(${note.id}, 'subheading', this.value)">
+                        ${subheadingOptions}
+                    </select>
+                </div>
+                <div class="notes-header" onclick="toggleNotes(this)">
+                    Content
+                </div>
+                <div class="notes-content">
+                    <div class="note-content" contenteditable="true" 
+                         oninput="updateNoteField(${note.id}, 'content', this.innerHTML)"
+                         placeholder="Note content...">
+                        ${note.content}
+                    </div>
+                </div>
+                <div class="move-buttons">
+                    <button onclick="moveNote(${note.id}, 'up')">↑</button>
+                    <button onclick="moveNote(${note.id}, 'down')">↓</button>
+                </div>
+            `;
+            return noteElement;
+        }
+
         function moveSubheading(type, index, direction) {
+            const subheadings = noteSubheadings;
+            
             if (direction === 'up' && index > 0) {
-                [contactSubheadings[index], contactSubheadings[index - 1]] = [contactSubheadings[index - 1], contactSubheadings[index]];
-            } else if (direction === 'down' && index < contactSubheadings.length - 1) {
-                [contactSubheadings[index], contactSubheadings[index + 1]] = [contactSubheadings[index + 1], contactSubheadings[index]];
+                [subheadings[index], subheadings[index - 1]] = [subheadings[index - 1], subheadings[index]];
+            } else if (direction === 'down' && index < subheadings.length - 1) {
+                [subheadings[index], subheadings[index + 1]] = [subheadings[index + 1], subheadings[index]];
             }
             
             saveSubheadings(type);
@@ -938,16 +883,18 @@
         }
 
         function updateSubheading(type, index, value) {
-            const oldValue = contactSubheadings[index];
-            contactSubheadings[index] = value;
+            const subheadings = noteSubheadings;
+            
+            const oldValue = subheadings[index];
+            subheadings[index] = value;
             
             // Update all items with the old subheading
-            contacts.forEach(contact => {
-                if (contact.subheading === oldValue) {
-                    contact.subheading = value;
+            notes.forEach(note => {
+                if (note.subheading === oldValue) {
+                    note.subheading = value;
                 }
             });
-            saveContacts();
+            saveNotes();
             
             saveSubheadings(type);
             renderSubheadings(type);
@@ -959,8 +906,10 @@
             
             if (!newSubheading) return;
             
-            if (!contactSubheadings.includes(newSubheading)) {
-                contactSubheadings.push(newSubheading);
+            const subheadings = noteSubheadings;
+            
+            if (!subheadings.includes(newSubheading)) {
+                subheadings.push(newSubheading);
                 document.getElementById(inputId).value = '';
                 saveSubheadings(type);
                 renderSubheadings(type);
@@ -968,20 +917,22 @@
         }
 
         function removeSubheading(type, index) {
-            if (contactSubheadings.length <= 1) return;
+            const subheadings = noteSubheadings;
             
-            if (!confirm(`Are you sure you want to delete the "${contactSubheadings[index]}" subheading? All items in this subheading will be moved to "${contactSubheadings[0]}"`)) {
+            if (subheadings.length <= 1) return;
+            
+            if (!confirm(`Are you sure you want to delete the "${subheadings[index]}" subheading? All items in this subheading will be moved to "${subheadings[0]}"`)) {
                 return;
             }
             
             // Move items from this subheading to the first subheading
-            const subheadingToRemove = contactSubheadings[index];
-            contacts.forEach(contact => {
-                if (contact.subheading === subheadingToRemove) {
-                    contact.subheading = contactSubheadings[0];
+            const subheadingToRemove = subheadings[index];
+            notes.forEach(note => {
+                if (note.subheading === subheadingToRemove) {
+                    note.subheading = subheadings[0];
                 }
             });
-            saveContacts();
+            saveNotes();
             
             // Remove from collapsed state tracking
             const key = `${type}-${subheadingToRemove}`;
@@ -989,151 +940,77 @@
                 delete collapsedSubheadings[key];
             }
             
-            contactSubheadings.splice(index, 1);
+            subheadings.splice(index, 1);
             saveSubheadings(type);
             renderSubheadings(type);
         }
 
         function saveSubheadings(type) {
-            localStorage.setItem('contactSubheadings', JSON.stringify(contactSubheadings));
+            localStorage.setItem('noteSubheadings', JSON.stringify(noteSubheadings));
         }
 
-        // Contact Functions
-        function addContact() {
-            const contact = {
+        // Note Functions
+        function addNote() {
+            const note = {
                 id: Date.now(),
-                name: document.getElementById('contactName').value.trim(),
-                jobTitle: document.getElementById('contactJobTitle').value.trim(),
-                email: document.getElementById('contactEmail').value.trim(),
-                phone: document.getElementById('contactPhone').value.trim(),
-                notes: document.getElementById('contactNotes').value.trim(),
-                flagged: false,
-                waitingOn: document.getElementById('contactWaitingOn').value.trim(),
-                subheading: contactSubheadings[0]
+                title: document.getElementById('noteTitle').value.trim(),
+                date: document.getElementById('noteDate').value,
+                content: document.getElementById('noteContent').innerHTML,
+                created: new Date().toISOString(),
+                updated: new Date().toISOString(),
+                subheading: noteSubheadings[0]
             };
 
-            if (!contact.name) return;
+            if (!note.title) return;
 
-            contacts.push(contact);
-            saveContacts();
-            renderContacts();
-            clearContactForm();
+            notes.push(note);
+            saveNotes();
+            renderNotes();
+            clearNoteForm();
         }
 
-        function renderContacts(filteredContacts = contacts) {
-            renderSubheadings('contact');
+        function renderNotes(filteredNotes = notes) {
+            renderSubheadings('note');
         }
 
-        function createContactElement(contact) {
-            const contactElement = document.createElement('div');
-            contactElement.className = 'contact-item';
-            contactElement.setAttribute('data-id', contact.id);
-            
-            const subheadingOptions = contactSubheadings.map(sh => 
-                `<option value="${sh}" ${contact.subheading === sh ? 'selected' : ''}>${sh}</option>`
-            ).join('');
-
-            contactElement.innerHTML = `
-                <i class="fas fa-flag contact-flag ${contact.flagged ? 'active' : ''}" 
-                   onclick="toggleContactFlag(${contact.id})"></i>
-                <div class="contact-header">
-                    <span class="task-title" contenteditable="true" 
-                          oninput="updateContactField(${contact.id}, 'name', this.innerText)">
-                        ${contact.name}
-                    </span>
-                    <div class="contact-details-row">
-                        <div>
-                            <span>Title:</span>
-                            <span class="editable" contenteditable="true" 
-                                  oninput="updateContactField(${contact.id}, 'jobTitle', this.innerText)">
-                                ${contact.jobTitle || 'Not specified'}
-                            </span>
-                        </div>
-                        <div>
-                            <span>Email:</span>
-                            <span class="editable" contenteditable="true" 
-                                  oninput="updateContactField(${contact.id}, 'email', this.innerText)">
-                                ${contact.email || 'Not specified'}
-                            </span>
-                        </div>
-                        <div>
-                            <span>Phone:</span>
-                            <span class="editable" contenteditable="true" 
-                                  oninput="updateContactField(${contact.id}, 'phone', this.innerText)">
-                                ${contact.phone || 'Not specified'}
-                            </span>
-                        </div>
-                    </div>
-                    <textarea class="waiting-on-input" placeholder="Waiting on..." 
-                           oninput="updateContactField(${contact.id}, 'waitingOn', this.value)">${contact.waitingOn || ''}</textarea>
-                    <div class="contact-controls">
-                        <button class="delete-btn" onclick="confirmDelete('contact', ${contact.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="contact-subheading-selector">
-                    <select onchange="updateContactField(${contact.id}, 'subheading', this.value)">
-                        ${subheadingOptions}
-                    </select>
-                </div>
-                <div class="notes-header" onclick="toggleNotes(this)">
-                    Notes
-                </div>
-                <div class="notes-content">
-                    <textarea oninput="updateContactField(${contact.id}, 'notes', this.value)"
-                              style="width:100%; min-height: 120px;">
-                        ${contact.notes}
-                    </textarea>
-                </div>
-                <div class="contact-move-buttons">
-                    <button onclick="moveContact(${contact.id}, 'up')">↑</button>
-                    <button onclick="moveContact(${contact.id}, 'down')">↓</button>
-                </div>
-            `;
-            return contactElement;
-        }
-
-        function toggleContactFlag(id) {
-            const contact = contacts.find(c => c.id === id);
-            if (contact) {
-                contact.flagged = !contact.flagged;
-                saveContacts();
-                renderContacts();
-            }
-        }
-
-        function moveContact(id, direction) {
-            const index = contacts.findIndex(c => c.id === id);
+        function moveNote(id, direction) {
+            const index = notes.findIndex(n => n.id === id);
             if (direction === 'up' && index > 0) {
-                [contacts[index], contacts[index - 1]] = [contacts[index - 1], contacts[index]];
-            } else if (direction === 'down' && index < contacts.length - 1) {
-                [contacts[index], contacts[index + 1]] = [contacts[index + 1], contacts[index]];
+                [notes[index], notes[index - 1]] = [notes[index - 1], notes[index]];
+            } else if (direction === 'down' && index < notes.length - 1) {
+                [notes[index], notes[index + 1]] = [notes[index + 1], notes[index]];
             }
-            saveContacts();
-            renderContacts();
+            saveNotes();
+            renderNotes();
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
         }
 
         // Common Functions
         function confirmDelete(type, id) {
             if (window.confirm(`Are you sure you want to delete this ${type}?`)) {
-                deleteContact(id);
+                deleteNote(id);
             }
         }
 
-        function deleteContact(id) {
-            contacts = contacts.filter(c => c.id !== id);
-            saveContacts();
-            renderContacts();
+        function deleteNote(id) {
+            notes = notes.filter(n => n.id !== id);
+            saveNotes();
+            renderNotes();
         }
 
-        function updateContactField(id, field, value) {
-            const contact = contacts.find(c => c.id === id);
-            if (contact) {
-                contact[field] = value;
-                saveContacts();
+        function updateNoteField(id, field, value) {
+            const note = notes.find(n => n.id === id);
+            if (note) {
+                note[field] = value;
+                note.updated = new Date().toISOString();
+                saveNotes();
                 if (field === 'subheading') {
-                    renderContacts();
+                    renderNotes();
                 }
             }
         }
@@ -1143,22 +1020,23 @@
             content.classList.toggle('expanded');
         }
 
-        function searchContacts() {
-            const searchTerm = document.getElementById('contactSearch').value.toLowerCase();
-            const filtered = showFlaggedOnly ? 
-                contacts.filter(c => c.flagged && Object.values(c).some(val => String(val).toLowerCase().includes(searchTerm))) :
-                contacts.filter(c => Object.values(c).some(val => String(val).toLowerCase().includes(searchTerm)));
+        function searchNotes() {
+            const searchTerm = document.getElementById('noteSearch').value.toLowerCase();
+            const filtered = notes.filter(n => 
+                n.title.toLowerCase().includes(searchTerm) ||
+                n.content.toLowerCase().includes(searchTerm)
+            );
             
-            const contactsList = document.getElementById('contactsList');
-            contactsList.innerHTML = '';
+            const notesList = document.getElementById('notesList');
+            notesList.innerHTML = '';
             
             // Group by subheading
             const grouped = {};
-            filtered.forEach(contact => {
-                if (!grouped[contact.subheading]) {
-                    grouped[contact.subheading] = [];
+            filtered.forEach(note => {
+                if (!grouped[note.subheading]) {
+                    grouped[note.subheading] = [];
                 }
-                grouped[contact.subheading].push(contact);
+                grouped[note.subheading].push(note);
             });
             
             // Render each group
@@ -1166,36 +1044,34 @@
                 const subheadingElement = document.createElement('div');
                 subheadingElement.className = 'subheading';
                 subheadingElement.textContent = subheading;
-                contactsList.appendChild(subheadingElement);
+                notesList.appendChild(subheadingElement);
                 
-                items.forEach(contact => {
-                    const contactElement = createContactElement(contact);
-                    contactsList.appendChild(contactElement);
+                items.forEach(note => {
+                    const noteElement = createNoteElement(note);
+                    notesList.appendChild(noteElement);
                 });
             }
         }
 
-        // Form Clearing
-        function clearContactForm() {
-            document.getElementById('contactName').value = '';
-            document.getElementById('contactJobTitle').value = '';
-            document.getElementById('contactEmail').value = '';
-            document.getElementById('contactPhone').value = '';
-            document.getElementById('contactNotes').value = '';
-            document.getElementById('contactWaitingOn').value = '';
+        function clearNoteForm() {
+            document.getElementById('noteTitle').value = '';
+            document.getElementById('noteDate').value = '';
+            document.getElementById('noteContent').innerHTML = '';
         }
-
-        // Storage
-        function saveContacts() { localStorage.setItem('contacts', JSON.stringify(contacts)); }
 
         // Initialization
         window.onload = () => {
-            renderContacts();
+            // Initialize sidebar active state
+            document.querySelector('.menu-item:nth-child(1)').classList.add('active');
             
-            // Collapse all input sections by default
-            document.querySelectorAll('.input-section').forEach(section => {
-                section.classList.add('collapsed');
-            });
+            // Initialize notes
+            renderNotes();
+            
+            // Collapse input section by default
+            const notesInputSection = document.querySelector('#notes .input-section');
+            if (notesInputSection) {
+                notesInputSection.classList.add('collapsed');
+            }
         };
     </script>
 </body>
