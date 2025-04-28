@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add Quill stylesheet -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -336,15 +338,22 @@
             margin-top: 15px;
         }
         
-        .large-notes {
-            width: 100%;
+        /* Updated notes editor styles */
+        .ql-editor {
             min-height: 150px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            resize: none;
             font-size: 14px;
-            overflow: hidden;
+            padding: 10px;
+        }
+        
+        .ql-container {
+            border: 1px solid #ddd !important;
+            border-radius: 4px;
+        }
+        
+        .ql-toolbar {
+            border: 1px solid #ddd !important;
+            border-bottom: none !important;
+            border-radius: 4px 4px 0 0;
         }
 
         .subheading {
@@ -794,10 +803,10 @@
                     <button class="add-contact-btn" onclick="addContact()">Add Contact</button>
                 </div>
                 
-                <!-- Notes (Full Width Below) -->
+                <!-- Notes (Full Width Below) - Now using Quill -->
                 <div class="notes-container" style="width: 100%; margin-top: 10px;">
                     <label for="contactNotes">Notes</label>
-                    <textarea id="contactNotes" class="large-notes" placeholder="Notes..."></textarea>
+                    <div id="contactNotesEditor" style="height: 200px;"></div>
                 </div>
             </div>
             
@@ -828,7 +837,12 @@
         </div>
     </div>
 
+    <!-- Add Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
+        // Initialize Quill editor
+        let quillEditor;
+        
         // Sidebar functionality
         function setActive(clickedItem) {
             document.querySelectorAll('.menu-item').forEach(item => {
@@ -867,6 +881,32 @@
         let contactSubheadings = JSON.parse(localStorage.getItem('contactSubheadings')) || ['General'];
         let collapsedSubheadings = JSON.parse(localStorage.getItem('collapsedSubheadings')) || {};
         let showFlaggedOnly = false;
+
+        // Initialize Quill editor when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            quillEditor = new Quill('#contactNotesEditor', {
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'script': 'sub'}, { 'script': 'super' }],
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'font': [] }],
+                        [{ 'align': [] }],
+                        ['clean'],
+                        ['link', 'image']
+                    ]
+                },
+                placeholder: 'Add notes...',
+                theme: 'snow'
+            });
+        });
 
         // Toggle input sections
         function toggleInputs(tab) {
@@ -1081,7 +1121,7 @@
                 jobTitle: document.getElementById('contactJobTitle').value.trim(),
                 email: document.getElementById('contactEmail').value.trim(),
                 phone: document.getElementById('contactPhone').value.trim(),
-                notes: document.getElementById('contactNotes').value.trim(),
+                notes: quillEditor.root.innerHTML, // Get HTML content from Quill
                 flagged: false,
                 waitingOn: document.getElementById('contactWaitingOn').value.trim(),
                 subheading: contactSubheadings[0]
@@ -1093,13 +1133,6 @@
             saveContacts();
             renderContacts();
             clearContactForm();
-            
-            // Auto-resize any new notes textareas
-            setTimeout(() => {
-                document.querySelectorAll('.large-notes').forEach(textarea => {
-                    autoResizeTextarea(textarea);
-                });
-            }, 0);
         }
 
         function renderContacts(filteredContacts = contacts) {
@@ -1115,6 +1148,9 @@
                 `<option value="${sh}" ${contact.subheading === sh ? 'selected' : ''}>${sh}</option>`
             ).join('');
 
+            // Create a unique ID for the Quill editor
+            const editorId = `quill-editor-${contact.id}`;
+            
             contactElement.innerHTML = `
                 <i class="fas fa-flag contact-flag ${contact.flagged ? 'active' : ''}" 
                    onclick="toggleContactFlag(${contact.id})"></i>
@@ -1163,16 +1199,47 @@
                     Notes
                 </div>
                 <div class="notes-content">
-                    <textarea class="large-notes" oninput="updateContactField(${contact.id}, 'notes', this.value); autoResizeTextarea(this)"
-                              style="width:100%; min-height: 120px;">
-                        ${contact.notes}
-                    </textarea>
+                    <div id="${editorId}" style="height: 200px;"></div>
                 </div>
                 <div class="contact-move-buttons">
                     <button onclick="moveContact(${contact.id}, 'up')">↑</button>
                     <button onclick="moveContact(${contact.id}, 'down')">↓</button>
                 </div>
             `;
+            
+            // Initialize Quill editor for this contact's notes
+            setTimeout(() => {
+                const editor = new Quill(`#${editorId}`, {
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            [{ 'header': 1 }, { 'header': 2 }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            [{ 'script': 'sub'}, { 'script': 'super' }],
+                            [{ 'indent': '-1'}, { 'indent': '+1' }],
+                            [{ 'direction': 'rtl' }],
+                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'font': [] }],
+                            [{ 'align': [] }],
+                            ['clean'],
+                            ['link', 'image']
+                        ]
+                    },
+                    theme: 'snow'
+                });
+                
+                // Set the content from the contact's notes
+                editor.clipboard.dangerouslyPasteHTML(contact.notes || '');
+                
+                // Update the contact's notes when the editor changes
+                editor.on('text-change', function() {
+                    updateContactField(contact.id, 'notes', editor.root.innerHTML);
+                });
+            }, 0);
+            
             return contactElement;
         }
 
@@ -1223,14 +1290,6 @@
         function toggleNotes(header) {
             const content = header.nextElementSibling;
             content.classList.toggle('expanded');
-            
-            // Resize textarea when notes are expanded
-            if (content.classList.contains('expanded')) {
-                const textarea = content.querySelector('textarea');
-                if (textarea) {
-                    autoResizeTextarea(textarea);
-                }
-            }
         }
 
         function searchContacts() {
@@ -1271,7 +1330,7 @@
             document.getElementById('contactJobTitle').value = '';
             document.getElementById('contactEmail').value = '';
             document.getElementById('contactPhone').value = '';
-            document.getElementById('contactNotes').value = '';
+            quillEditor.root.innerHTML = ''; // Clear Quill editor
             document.getElementById('contactWaitingOn').value = '';
         }
 
@@ -1285,14 +1344,6 @@
             // Collapse all input sections by default
             document.querySelectorAll('.input-section').forEach(section => {
                 section.classList.add('collapsed');
-            });
-            
-            // Initialize auto-resizing for all notes textareas
-            document.querySelectorAll('.large-notes').forEach(textarea => {
-                autoResizeTextarea(textarea);
-                textarea.addEventListener('input', function() {
-                    autoResizeTextarea(this);
-                });
             });
         };
     </script>
