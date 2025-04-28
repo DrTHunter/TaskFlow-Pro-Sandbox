@@ -272,6 +272,7 @@
             width: fit-content;
             padding: 6px 12px;
             white-space: nowrap;
+            margin-left: 10px;
         }
 
         .contact-item {
@@ -421,7 +422,7 @@
         }
 
         .waiting-on-input {
-            width: 80% !important;
+            width: calc(100% - 120px) !important;
             min-width: 200px;
             height: 36px;
             margin-left: 0 !important;
@@ -542,6 +543,19 @@
             max-height: 0;
         }
 
+        /* Waiting On row styling */
+        .waiting-on-row {
+            display: flex;
+            align-items: flex-end;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .waiting-on-container {
+            flex: 1;
+            margin-right: 10px;
+        }
+
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -629,6 +643,22 @@
                 flex: 1 1 100%;
                 margin-right: 0;
                 width: 100%;
+            }
+
+            /* Mobile waiting on row */
+            .waiting-on-row {
+                flex-direction: column;
+            }
+            
+            .waiting-on-container {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .add-contact-btn {
+                width: 100%;
+                margin-left: 0;
             }
         }
     </style>
@@ -752,14 +782,12 @@
                 </div>
                 
                 <!-- Waiting On (Full Width Below) -->
-                <div class="contact-input-row">
-                    <div class="input-group" style="flex: 6.5;">
+                <div class="waiting-on-row">
+                    <div class="waiting-on-container">
                         <label for="contactWaitingOn">Waiting On</label>
                         <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
                     </div>
-                    <div class="input-group" style="align-self: flex-end;">
-                        <button class="add-contact-btn" onclick="addContact()">Add Contact</button>
-                    </div>
+                    <button class="add-contact-btn" onclick="addContact()">Add Contact</button>
                 </div>
                 
                 <!-- Notes (Full Width Below) -->
