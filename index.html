@@ -269,10 +269,14 @@
 
         /* Add Contact button specific styling */
         .add-contact-btn {
-            width: fit-content;
-            padding: 6px 12px;
-            white-space: nowrap;
-            margin-left: 10px;
+                width: fit-content;
+                padding: 0 12px; /* Remove top/bottom padding, keep left/right */
+                height: 36px; /* Match the input's height */
+                white-space: nowrap;
+                margin-left: 10px;
+                display: flex;
+                align-items: center; /* Vertically center the text */
+                justify-content: center; /* Horizontally center the text */
         }
 
         .contact-item {
@@ -425,7 +429,7 @@
             width: calc(80%) !important;
             min-width: 200px;
             height: 36px;
-            margin-left: 10px; !important;
+            margin-left: 5px; !important;
             padding: 8px;
             font-size: 13px;
             border: 1px solid #ddd;
