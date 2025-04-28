@@ -258,7 +258,7 @@
         }
 
         .notes-content.expanded {
-            max-height: 1000px;
+            max-height: none;
         }
 
         /* Quill editor styles for input only */
@@ -472,6 +472,35 @@
 
         .note-date-input {
             width: 150px !important;
+        }
+
+        /* Note content Quill editor styles */
+        .note-quill-container {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .note-quill-container .ql-container {
+            border: 1px solid #ddd !important;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .note-quill-container .ql-editor {
+            min-height: 100px;
+            padding: 8px;
+            overflow-y: visible;
+        }
+
+        .note-quill-container .ql-toolbar {
+            border: 1px solid #ddd !important;
+            border-radius: 4px 4px 0 0;
+            background-color: #f8f9fa;
+        }
+
+        .note-quill-container .ql-container.ql-snow {
+            border-top: 1px solid #ddd !important;
         }
 
         @media (max-width: 768px) {
@@ -734,6 +763,9 @@
         // Initial height adjustment
         window.addEventListener('load', adjustEditorHeight);
 
+        // Store all note Quill instances
+        const noteQuills = {};
+
         // Sidebar functionality
         function setActive(clickedItem) {
             document.querySelectorAll('.menu-item').forEach(item => {
@@ -927,17 +959,67 @@
                     Content
                 </div>
                 <div class="notes-content">
-                    <div class="note-content" contenteditable="true" 
-                         oninput="updateNoteField(${note.id}, 'content', this.innerHTML)"
-                         placeholder="Note content...">
-                        ${note.content}
-                    </div>
+                    <div id="note-editor-${note.id}" class="note-quill-container"></div>
                 </div>
                 <div class="move-buttons">
                     <button onclick="moveNote(${note.id}, 'up')">↑</button>
                     <button onclick="moveNote(${note.id}, 'down')">↓</button>
                 </div>
             `;
+            
+            // Initialize Quill editor for this note's content
+            setTimeout(() => {
+                const editorContainer = noteElement.querySelector(`#note-editor-${note.id}`);
+                
+                // Clean up any existing Quill instance
+                if (noteQuills[note.id]) {
+                    noteQuills[note.id] = null;
+                }
+                
+                // Create new Quill instance
+                const quill = new Quill(editorContainer, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            [{ 'header': 1 }, { 'header': 2 }],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            [{ 'script': 'sub'}, { 'script': 'super' }],
+                            [{ 'indent': '-1'}, { 'indent': '+1' }],
+                            [{ 'direction': 'rtl' }],
+                            [{ 'size': ['small', false, 'large', 'huge'] }],
+                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            [{ 'font': [] }],
+                            [{ 'align': [] }],
+                            ['clean'],
+                            ['link', 'image', 'video']
+                        ]
+                    }
+                });
+                
+                // Set the content
+                quill.root.innerHTML = note.content || '';
+                
+                // Make it auto-expanding
+                const editor = quill.root;
+                editor.style.height = 'auto';
+                editor.style.height = (editor.scrollHeight) + 'px';
+                
+                // Update note content when editor changes
+                quill.on('text-change', function() {
+                    updateNoteField(note.id, 'content', quill.root.innerHTML);
+                    
+                    // Adjust height
+                    editor.style.height = 'auto';
+                    editor.style.height = (editor.scrollHeight) + 'px';
+                });
+                
+                // Store the Quill instance
+                noteQuills[note.id] = quill;
+            }, 0);
+            
             return noteElement;
         }
 
@@ -1090,6 +1172,19 @@
         function toggleNotes(header) {
             const content = header.nextElementSibling;
             content.classList.toggle('expanded');
+            
+            // Adjust Quill editor height when expanded
+            if (content.classList.contains('expanded')) {
+                const noteId = header.closest('.note-item').getAttribute('data-id');
+                const quill = noteQuills[noteId];
+                if (quill) {
+                    setTimeout(() => {
+                        const editor = quill.root;
+                        editor.style.height = 'auto';
+                        editor.style.height = (editor.scrollHeight) + 'px';
+                    }, 10);
+                }
+            }
         }
 
         function searchNotes() {
