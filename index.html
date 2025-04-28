@@ -261,7 +261,7 @@
             max-height: 1000px;
         }
 
-        /* Quill editor styles */
+        /* Quill editor styles for input only */
         .ql-container {
             border: 1px solid #ddd !important;
             border-radius: 4px;
@@ -693,7 +693,7 @@
     <!-- Add Quill library -->
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
-        // Initialize Quill editor
+        // Initialize Quill editor for the input only
         let quill = new Quill('#noteContent', {
             theme: 'snow',
             placeholder: 'Enter note here...',
@@ -719,7 +719,7 @@
 
         // Make Quill editor auto-growing
         function adjustEditorHeight() {
-            const editor = document.querySelector('.ql-editor');
+            const editor = document.querySelector('#noteContent .ql-editor');
             if (editor) {
                 editor.style.height = 'auto';
                 editor.style.height = (editor.scrollHeight) + 'px';
@@ -901,11 +901,6 @@
                 `<option value="${sh}" ${note.subheading === sh ? 'selected' : ''}>${sh}</option>`
             ).join('');
 
-            // Create a container for the Quill editor
-            const editorContainer = document.createElement('div');
-            editorContainer.className = 'note-quill-container';
-            editorContainer.style.display = 'none'; // Initially hidden
-            
             noteElement.innerHTML = `
                 <div class="note-header">
                     <div style="display: flex; align-items: center; flex-grow: 1;">
@@ -932,17 +927,17 @@
                     Content
                 </div>
                 <div class="notes-content">
-                    ${note.content}
+                    <div class="note-content" contenteditable="true" 
+                         oninput="updateNoteField(${note.id}, 'content', this.innerHTML)"
+                         placeholder="Note content...">
+                        ${note.content}
+                    </div>
                 </div>
                 <div class="move-buttons">
                     <button onclick="moveNote(${note.id}, 'up')">↑</button>
                     <button onclick="moveNote(${note.id}, 'down')">↓</button>
                 </div>
             `;
-            
-            // Add the editor container to the note element
-            noteElement.appendChild(editorContainer);
-            
             return noteElement;
         }
 
@@ -1095,71 +1090,13 @@
         function toggleNotes(header) {
             const content = header.nextElementSibling;
             content.classList.toggle('expanded');
-            
-            // If we're expanding, initialize the Quill editor
-            if (content.classList.contains('expanded')) {
-                const noteId = header.closest('.note-item').getAttribute('data-id');
-                const note = notes.find(n => n.id === parseInt(noteId));
-                
-                // Create a new Quill editor for this note
-                const editorContainer = header.closest('.note-item').querySelector('.note-quill-container');
-                editorContainer.innerHTML = '<div class="auto-growing-quill"></div>';
-                editorContainer.style.display = 'block';
-                
-                const noteQuill = new Quill(editorContainer.querySelector('.auto-growing-quill'), {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            ['bold', 'italic', 'underline', 'strike'],
-                            ['blockquote', 'code-block'],
-                            [{ 'header': 1 }, { 'header': 2 }],
-                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                            [{ 'script': 'sub'}, { 'script': 'super' }],
-                            [{ 'indent': '-1'}, { 'indent': '+1' }],
-                            [{ 'direction': 'rtl' }],
-                            [{ 'size': ['small', false, 'large', 'huge'] }],
-                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                            [{ 'color': [] }, { 'background': [] }],
-                            [{ 'font': [] }],
-                            [{ 'align': [] }],
-                            ['clean'],
-                            ['link', 'image', 'video']
-                        ]
-                    }
-                });
-                
-                // Set the content
-                noteQuill.root.innerHTML = note.content;
-                
-                // Make it auto-growing
-                noteQuill.on('text-change', function() {
-                    const editor = noteQuill.root;
-                    editor.style.height = 'auto';
-                    editor.style.height = (editor.scrollHeight) + 'px';
-                    
-                    // Update the note content
-                    note.content = editor.innerHTML;
-                    saveNotes();
-                });
-                
-                // Initial height adjustment
-                setTimeout(() => {
-                    const editor = noteQuill.root;
-                    editor.style.height = 'auto';
-                    editor.style.height = (editor.scrollHeight) + 'px';
-                }, 100);
-            } else {
-                // Hide the editor when collapsing
-                const editorContainer = header.closest('.note-item').querySelector('.note-quill-container');
-                editorContainer.style.display = 'none';
-            }
         }
 
         function searchNotes() {
             const searchTerm = document.getElementById('noteSearch').value.toLowerCase();
             const filtered = notes.filter(n => 
                 n.title.toLowerCase().includes(searchTerm) ||
-                (n.content && n.content.toLowerCase().includes(searchTerm))
+                n.content.toLowerCase().includes(searchTerm)
             );
             
             const notesList = document.getElementById('notesList');
