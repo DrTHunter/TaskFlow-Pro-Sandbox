@@ -329,8 +329,9 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            resize: vertical;
+            resize: none;
             font-size: 14px;
+            overflow: hidden;
         }
 
         .subheading {
@@ -814,18 +815,18 @@
             document.getElementById('contentTitle').textContent = titleMap[tabName];
         }
 
+        // Auto-resize textarea function
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto'; // Reset height
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
         // Contacts Tab Functionality
         // Data Management
         let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
         let contactSubheadings = JSON.parse(localStorage.getItem('contactSubheadings')) || ['General'];
         let collapsedSubheadings = JSON.parse(localStorage.getItem('collapsedSubheadings')) || {};
         let showFlaggedOnly = false;
-
-        // Auto-resize textarea function
-        function autoResizeTextarea(textarea) {
-            textarea.style.height = 'auto'; // Reset height
-            textarea.style.height = (textarea.scrollHeight) + 'px';
-        }
 
         // Toggle input sections
         function toggleInputs(tab) {
@@ -1052,6 +1053,13 @@
             saveContacts();
             renderContacts();
             clearContactForm();
+            
+            // Auto-resize any new notes textareas
+            setTimeout(() => {
+                document.querySelectorAll('.large-notes').forEach(textarea => {
+                    autoResizeTextarea(textarea);
+                });
+            }, 0);
         }
 
         function renderContacts(filteredContacts = contacts) {
@@ -1115,7 +1123,7 @@
                     Notes
                 </div>
                 <div class="notes-content">
-                    <textarea oninput="updateContactField(${contact.id}, 'notes', this.value)"
+                    <textarea class="large-notes" oninput="updateContactField(${contact.id}, 'notes', this.value); autoResizeTextarea(this)"
                               style="width:100%; min-height: 120px;">
                         ${contact.notes}
                     </textarea>
@@ -1175,6 +1183,14 @@
         function toggleNotes(header) {
             const content = header.nextElementSibling;
             content.classList.toggle('expanded');
+            
+            // Resize textarea when notes are expanded
+            if (content.classList.contains('expanded')) {
+                const textarea = content.querySelector('textarea');
+                if (textarea) {
+                    autoResizeTextarea(textarea);
+                }
+            }
         }
 
         function searchContacts() {
@@ -1229,6 +1245,14 @@
             // Collapse all input sections by default
             document.querySelectorAll('.input-section').forEach(section => {
                 section.classList.add('collapsed');
+            });
+            
+            // Initialize auto-resizing for all notes textareas
+            document.querySelectorAll('.large-notes').forEach(textarea => {
+                autoResizeTextarea(textarea);
+                textarea.addEventListener('input', function() {
+                    autoResizeTextarea(this);
+                });
             });
         };
     </script>
