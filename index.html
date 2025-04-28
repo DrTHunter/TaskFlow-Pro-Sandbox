@@ -413,14 +413,15 @@
             color: #ffc107;
         }
 
-        /* Updated waiting-on input style to match process title */
         .waiting-on-input {
-            width: 100% !important;
+            width: 80% !important;
+            min-width: 200px;
+            height: 36px;
+            margin-left: 0 !important;
             padding: 8px;
             font-size: 13px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-bottom: 10px;
         }
 
         .notes-header {
@@ -532,24 +533,6 @@
 
         .collapsible-content.collapsed {
             max-height: 0;
-        }
-
-        /* Updated add contact button style to match process style */
-        .add-contact-btn {
-            width: 100%;
-            padding: 8px;
-            font-size: 13px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: filter 0.3s;
-            margin-top: 5px;
-        }
-
-        .add-contact-btn:hover {
-            filter: brightness(0.9);
         }
 
         @media (max-width: 768px) {
@@ -768,7 +751,7 @@
                         <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
                     </div>
                     <div class="input-group" style="align-self: flex-end;">
-                        <button class="add-contact-btn" onclick="addContact()">Add Contact</button>
+                        <button onclick="addContact()">Add Contact</button>
                     </div>
                 </div>
                 
