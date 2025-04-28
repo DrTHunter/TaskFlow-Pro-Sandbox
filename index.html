@@ -267,6 +267,13 @@
             filter: brightness(0.9);
         }
 
+        /* Add Contact button specific styling */
+        .add-contact-btn {
+            width: fit-content;
+            padding: 6px 12px;
+            white-space: nowrap;
+        }
+
         .contact-item {
             padding: 8px 12px;
             background-color: white;
@@ -751,7 +758,7 @@
                         <input type="text" class="waiting-on-input" placeholder="Waiting on..." id="contactWaitingOn">
                     </div>
                     <div class="input-group" style="align-self: flex-end;">
-                        <button onclick="addContact()">Add Contact</button>
+                        <button class="add-contact-btn" onclick="addContact()">Add Contact</button>
                     </div>
                 </div>
                 
