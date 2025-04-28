@@ -212,21 +212,21 @@
             display: flex;
             width: 100%;
             flex-wrap: wrap;
-            gap: 0; /* Remove gap to use margins instead */
+            gap: 0;
         }
 
         /* Make Name & Job Title larger (flex: 2) */
         .input-group:nth-child(1),
         .input-group:nth-child(2) {
-            flex: 2; /* Bigger than Email/Phone */
-            margin-right: 1%; /* Adds even spacing */
+            flex: 2;
+            margin-right: 1%;
         }
 
         /* Make Email & Phone smaller (flex: 1.5) */
         .input-group:nth-child(3),
         .input-group:nth-child(4) {
             flex: 1;
-            margin-right: 1%; /* Adds even spacing */
+            margin-right: 1%;
         }
 
         /* Remove margin from the last element */
@@ -272,13 +272,13 @@
         /* Add Contact button specific styling */
         .add-contact-btn {
                 width: fit-content;
-                padding: 0 12px; /* Remove top/bottom padding, keep left/right */
-                height: 36px; /* Match the input's height */
+                padding: 0 12px;
+                height: 36px;
                 white-space: nowrap;
                 margin-left: 10px;
                 display: flex;
-                align-items: center; /* Vertically center the text */
-                justify-content: center; /* Horizontally center the text */
+                align-items: center;
+                justify-content: center;
         }
 
         .contact-item {
@@ -330,7 +330,7 @@
             padding: 8px 12px;
             font-size: 12px;
             background-color: #6c757d;
-            margin-left: 10px; /* ← Adds space between search bar & button */
+            margin-left: 10px;
         }
 
         .notes-container {
@@ -338,11 +338,13 @@
             margin-top: 15px;
         }
         
-        /* Updated notes editor styles */
+        /* Updated notes editor styles for auto-growing */
         .ql-editor {
             min-height: 150px;
             font-size: 14px;
             padding: 10px;
+            height: auto !important;
+            overflow-y: visible !important;
         }
         
         .ql-container {
@@ -462,7 +464,7 @@
         }
 
         .notes-content.expanded {
-            max-height: 1000px;
+            max-height: none;
         }
 
         .settings-menu {
@@ -508,13 +510,13 @@
         }
 
         .new-item-btn {
-            min-width: auto; /* Remove fixed minimum width */
+            min-width: auto;
             width: auto;
             margin-right: 10px;
             padding: 6px 10px; 
             font-size: 13px;
             background-color: #28a745;
-            white-space: nowrap; /* Prevent text wrapping */
+            white-space: nowrap;
         }
 
         .reset-btn {
@@ -806,7 +808,7 @@
                 <!-- Notes (Full Width Below) - Now using Quill -->
                 <div class="notes-container" style="width: 100%; margin-top: 10px;">
                     <label for="contactNotes">Notes</label>
-                    <div id="contactNotesEditor" style="height: 200px;"></div>
+                    <div id="contactNotesEditor"></div>
                 </div>
             </div>
             
@@ -871,7 +873,7 @@
 
         // Auto-resize textarea function
         function autoResizeTextarea(textarea) {
-            textarea.style.height = 'auto'; // Reset height
+            textarea.style.height = 'auto';
             textarea.style.height = (textarea.scrollHeight) + 'px';
         }
 
@@ -905,6 +907,13 @@
                 },
                 placeholder: 'Add notes...',
                 theme: 'snow'
+            });
+
+            // Auto-grow functionality for main editor
+            quillEditor.on('text-change', function() {
+                const editor = document.querySelector('#contactNotesEditor .ql-editor');
+                editor.style.height = 'auto';
+                editor.style.height = editor.scrollHeight + 'px';
             });
         });
 
@@ -953,7 +962,6 @@
             listContainer.innerHTML = '';
             
             contactSubheadings.forEach((subheading, index) => {
-                // Render items for this subheading in the list container
                 renderItemsForSubheading(type, subheading, listContainer, index);
             });
         }
@@ -965,14 +973,11 @@
             
             if (items.length === 0) return;
             
-            // Check if this subheading is collapsed
             const isCollapsed = collapsedSubheadings[`${type}-${subheading}`] || false;
             
-            // Add subheading label
             const subheadingElement = document.createElement('div');
             subheadingElement.className = 'subheading';
             subheadingElement.onclick = (e) => {
-                // Don't toggle if clicking on controls
                 if (e.target.closest('.subheading-controls')) return;
                 
                 const key = `${type}-${subheading}`;
@@ -1027,14 +1032,12 @@
             subheadingElement.appendChild(input);
             subheadingElement.appendChild(controls);
             
-            // Create content container
             const contentContainer = document.createElement('div');
             contentContainer.className = `collapsible-content ${isCollapsed ? 'collapsed' : ''}`;
             
             container.appendChild(subheadingElement);
             container.appendChild(contentContainer);
             
-            // Add items
             items.forEach(item => {
                 const element = createContactElement(item);
                 contentContainer.appendChild(element);
@@ -1056,7 +1059,6 @@
             const oldValue = contactSubheadings[index];
             contactSubheadings[index] = value;
             
-            // Update all items with the old subheading
             contacts.forEach(contact => {
                 if (contact.subheading === oldValue) {
                     contact.subheading = value;
@@ -1089,7 +1091,6 @@
                 return;
             }
             
-            // Move items from this subheading to the first subheading
             const subheadingToRemove = contactSubheadings[index];
             contacts.forEach(contact => {
                 if (contact.subheading === subheadingToRemove) {
@@ -1098,7 +1099,6 @@
             });
             saveContacts();
             
-            // Remove from collapsed state tracking
             const key = `${type}-${subheadingToRemove}`;
             if (collapsedSubheadings[key]) {
                 delete collapsedSubheadings[key];
@@ -1121,7 +1121,7 @@
                 jobTitle: document.getElementById('contactJobTitle').value.trim(),
                 email: document.getElementById('contactEmail').value.trim(),
                 phone: document.getElementById('contactPhone').value.trim(),
-                notes: quillEditor.root.innerHTML, // Get HTML content from Quill
+                notes: quillEditor.root.innerHTML,
                 flagged: false,
                 waitingOn: document.getElementById('contactWaitingOn').value.trim(),
                 subheading: contactSubheadings[0]
@@ -1148,7 +1148,6 @@
                 `<option value="${sh}" ${contact.subheading === sh ? 'selected' : ''}>${sh}</option>`
             ).join('');
 
-            // Create a unique ID for the Quill editor
             const editorId = `quill-editor-${contact.id}`;
             
             contactElement.innerHTML = `
@@ -1199,7 +1198,7 @@
                     Notes
                 </div>
                 <div class="notes-content">
-                    <div id="${editorId}" style="height: 200px;"></div>
+                    <div id="${editorId}"></div>
                 </div>
                 <div class="contact-move-buttons">
                     <button onclick="moveContact(${contact.id}, 'up')">↑</button>
@@ -1207,7 +1206,6 @@
                 </div>
             `;
             
-            // Initialize Quill editor for this contact's notes
             setTimeout(() => {
                 const editor = new Quill(`#${editorId}`, {
                     modules: {
@@ -1231,13 +1229,21 @@
                     theme: 'snow'
                 });
                 
-                // Set the content from the contact's notes
                 editor.clipboard.dangerouslyPasteHTML(contact.notes || '');
                 
-                // Update the contact's notes when the editor changes
                 editor.on('text-change', function() {
                     updateContactField(contact.id, 'notes', editor.root.innerHTML);
+                    
+                    // Auto-grow functionality for this editor
+                    const editorContainer = document.querySelector(`#${editorId} .ql-editor`);
+                    editorContainer.style.height = 'auto';
+                    editorContainer.style.height = editorContainer.scrollHeight + 'px';
                 });
+
+                // Set initial height
+                const editorContainer = document.querySelector(`#${editorId} .ql-editor`);
+                editorContainer.style.height = 'auto';
+                editorContainer.style.height = editorContainer.scrollHeight + 'px';
             }, 0);
             
             return contactElement;
@@ -1301,7 +1307,6 @@
             const contactsList = document.getElementById('contactsList');
             contactsList.innerHTML = '';
             
-            // Group by subheading
             const grouped = {};
             filtered.forEach(contact => {
                 if (!grouped[contact.subheading]) {
@@ -1310,7 +1315,6 @@
                 grouped[contact.subheading].push(contact);
             });
             
-            // Render each group
             for (const [subheading, items] of Object.entries(grouped)) {
                 const subheadingElement = document.createElement('div');
                 subheadingElement.className = 'subheading';
@@ -1330,7 +1334,7 @@
             document.getElementById('contactJobTitle').value = '';
             document.getElementById('contactEmail').value = '';
             document.getElementById('contactPhone').value = '';
-            quillEditor.root.innerHTML = ''; // Clear Quill editor
+            quillEditor.root.innerHTML = '';
             document.getElementById('contactWaitingOn').value = '';
         }
 
@@ -1341,7 +1345,6 @@
         window.onload = () => {
             renderContacts();
             
-            // Collapse all input sections by default
             document.querySelectorAll('.input-section').forEach(section => {
                 section.classList.add('collapsed');
             });
