@@ -443,13 +443,13 @@
         }
 
         .note-title {
-            font-weight: bold;
-            font-size: 16px;
-            flex: 1;
-            margin-right: 40px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            height: 34px;          /* Match input height */
+            line-height: 34px;     /* Vertically center text */
+            padding: 0 8px;        /* Match input padding */
+            border: 1px solid transparent; /* Reserve space for border */
+            box-sizing: border-box; /* Include padding in height */
+            display: inline-block; /* Needed for height to work */
+            vertical-align: middle;
         }
 
         .note-date {
