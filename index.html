@@ -291,7 +291,7 @@
         .delete-btn {
             background-color: #dc3545;
             padding: 6px 12px;
-            height: 34px;     /* Match dropdown height */
+            height: 34px;
             color: white;
             border: none;
             border-radius: 4px;
@@ -409,10 +409,42 @@
             margin-left: 10px;
         }
 
+        /* Updated Process Subheading Selector to match Notes tab */
         .process-subheading-selector {
             position: absolute;
             right: 50px;
             top: 12px;
+        }
+
+        .process-subheading-selector select {
+            height: 34px !important;
+            min-height: 34px;
+            line-height: 34px;
+            font-size: 13px;
+            padding: 0 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 28px;
+            transition: border-color 0.3s ease;
+            width: 150px;
+        }
+
+        .process-subheading-selector select:hover {
+            border-color: #1a73e8;
+        }
+
+        .process-subheading-selector select:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 1px rgba(26, 115, 232, 0.2);
         }
 
         .new-subheading-bar {
@@ -512,6 +544,10 @@
             .process-subheading-selector {
                 position: static;
                 margin-top: 5px;
+                width: 100%;
+            }
+
+            .process-subheading-selector select {
                 width: 100%;
             }
 
