@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Add Quill stylesheet -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
         * {
@@ -245,7 +244,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin: 30px 0 10px 0; /* top:30px, right:0, bottom:10px, left:0 */
+            margin: 10px 0;
             cursor: pointer;
             color: #1a73e8;
             font-size: 0.9em;
@@ -380,12 +379,28 @@
         }
 
         .note-subheading-selector {
-            height: 34px;       /* Match your desired height */
-            font-size: 13px;    /* Match input text size */
-            line-height: 34px;  /* Ensures text stays centered */
             position: absolute;
             right: 50px;
             top: 12px;
+        }
+
+        .note-subheading-selector select {
+            height: 34px !important;
+            min-height: 34px;
+            line-height: 34px;
+            font-size: 13px;
+            padding: 0 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 28px;
         }
 
         .new-item-btn {
@@ -437,6 +452,7 @@
             margin-bottom: 10px;
             position: relative;
             width: 100%;
+            min-height: 34px;
         }
 
         .task-controls {
@@ -446,12 +462,19 @@
         }
 
         .note-title {
-            height: 34px;          /* Match input height */
-            line-height: 34px;     /* Vertically center text */
-            padding: 0 8px;        /* Match input padding */
-            border: 1px solid transparent; /* Reserve space for border */
-            box-sizing: border-box; /* Include padding in height */
-            display: inline-block; /* Needed for height to work */
+            font-weight: bold;
+            font-size: 16px;
+            flex: 1;
+            margin-right: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            height: 34px;
+            line-height: 34px;
+            padding: 0 8px;
+            border: 1px solid transparent;
+            box-sizing: border-box;
+            display: inline-block;
             vertical-align: middle;
         }
 
