@@ -484,6 +484,24 @@
             color: #666;
             margin-left: 10px;
             white-space: nowrap;
+            cursor: pointer;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        .note-date:hover {
+            background-color: #f0f0f0;
+        }
+
+        .note-date-input {
+            width: 150px !important;
+            display: none;
+            margin-left: 10px;
+            padding: 2px 5px !important;
+            height: 24px !important;
+            line-height: 24px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 4px !important;
         }
 
         .note-title-input-container {
@@ -967,9 +985,11 @@
                               oninput="updateNoteField(${note.id}, 'title', this.innerText)">
                             ${note.title}
                         </span>
-                        <span class="note-date">
+                        <span class="note-date" onclick="makeDateEditable(${note.id}, this)">
                             ${note.date ? formatDate(note.date) : 'No date'}
                         </span>
+                        <input type="date" id="date-input-${note.id}" class="note-date-input" 
+                               style="display: none;" onchange="updateNoteDate(${note.id}, this.value)">
                     </div>
                     <div class="task-controls">
                         <button class="delete-btn" onclick="confirmDelete('note', ${note.id})">
@@ -1048,6 +1068,35 @@
             }, 0);
             
             return noteElement;
+        }
+
+        function makeDateEditable(noteId, element) {
+            // Hide the display element
+            element.style.display = 'none';
+            
+            // Show the input field
+            const input = document.getElementById(`date-input-${noteId}`);
+            input.style.display = 'inline-block';
+            input.value = notes.find(n => n.id === noteId).date || '';
+            input.focus();
+        }
+
+        function updateNoteDate(noteId, newDate) {
+            // Update the note
+            const note = notes.find(n => n.id === noteId);
+            if (note) {
+                note.date = newDate;
+                note.updated = new Date().toISOString();
+                saveNotes();
+                
+                // Update the display
+                const dateElement = document.querySelector(`.note-item[data-id="${noteId}"] .note-date`);
+                dateElement.textContent = newDate ? formatDate(newDate) : 'No date';
+                dateElement.style.display = 'inline-block';
+                
+                // Hide the input
+                document.getElementById(`date-input-${noteId}`).style.display = 'none';
+            }
         }
 
         function moveSubheading(type, index, direction) {
