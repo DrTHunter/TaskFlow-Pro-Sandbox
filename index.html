@@ -739,6 +739,15 @@
             <p>This would contain your calendar view and scheduling tools.</p>
         </div>
 
+        <!-- Radio Tab -->
+        <div id="radio" class="tab-content">
+            <iframe 
+                src="https://drthunter.github.io/AudioOasis/" 
+                style="width: 100%; height: calc(100vh - 60px); border: none;"
+                allowfullscreen>
+            </iframe>
+        </div>
+        
         <!-- Settings Tab -->
         <div id="settings" class="tab-content">
             <h2>Settings</h2>
@@ -814,6 +823,7 @@
                 'contacts': 'Contacts',
                 'process': 'Process',
                 'calendar': 'Calendar',
+                'radio': 'Radio',
                 'settings': 'Settings'
             };
             document.getElementById('contentTitle').textContent = titleMap[tabName];
