@@ -187,15 +187,14 @@
         /* Notes Tab Specific Styles */
         .input-section {
             display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 15px;
             transition: all 0.3s ease;
             overflow: hidden;
+            align-items: flex-end;
             border-bottom: 1px solid #ddd;
             padding-bottom: 15px;
-            width: 100%;
         }
 
         .input-section.collapsed {
@@ -489,24 +488,17 @@
 
         .note-title-input-container {
             display: flex;
-            flex-grow: 1;
             align-items: center;
+            width: 100%;
             gap: 10px;
         }
 
         .note-title-input {
-            flex: 1;
-            width: auto !important;
+            width: 50% !important;
         }
 
         .note-date-input {
             width: 150px !important;
-        }
-
-        /* Add Note button positioning */
-        .input-section button {
-            margin-left: 10px;
-            white-space: nowrap;
         }
 
         /* Note content Quill editor styles */
